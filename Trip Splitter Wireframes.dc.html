@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Patrick Hand',system-ui,sans-serif;background:#ecebe7;color:#2b2b2b;-webkit-font-smoothing:antialiased}
+</style>
+</helmet>
+
+<div style="padding:34px 40px 70px;min-width:max-content">
+
+  <!-- ===== Header ===== -->
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="font-size:38px;margin:0;letter-spacing:0.5px">Trip Expense Splitter</h1>
+    <span style="font-size:16px;color:#9a9a96">mobile web · low-fi wireframes</span>
+  </div>
+  <p style="font-size:18px;color:#6b6b67;margin:6px 0 0;max-width:720px">Organizer enters each activity and taps who joined → the app splits the cost equally → everyone sees their own share. No Excel, no manual math.</p>
+  <div style="display:flex;gap:18px;margin-top:14px;font-size:14px;color:#8a8a86;flex-wrap:wrap">
+    <span style="display:flex;align-items:center;gap:7px"><span style="width:16px;height:16px;border-radius:5px;background:#4a73c4;border:2px solid #2b2b2b;display:inline-block"></span>selected / primary action</span>
+    <span style="display:flex;align-items:center;gap:7px"><span style="width:16px;height:16px;border-radius:5px;background:#fff;border:2px dashed #bdbcb6;display:inline-block"></span>unselected / optional</span>
+    <span style="display:flex;align-items:center;gap:7px"><span style="width:16px;height:16px;border-radius:4px;background:#fdf3c7;border:1.5px solid #ddca73;display:inline-block"></span>annotation</span>
+  </div>
+
+  <!-- ===== Section 1: Organizer ===== -->
+  <div style="display:flex;align-items:center;gap:11px;margin:38px 0 18px">
+    <div style="width:32px;height:32px;border-radius:50%;background:#2b2b2b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px">1</div>
+    <span style="font-size:25px">Organizer flow — Nga sets up the trip</span>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:nowrap">
+
+    <!-- PHONE 0 · Sign in -->
+    <div style="width:300px;flex:0 0 300px;min-height:610px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">0 · Sign in</p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:18px">
+        <div style="width:60px;height:60px;border-radius:16px;background:#eef3fc;border:2.5px solid #2b2b2b;display:flex;align-items:center;justify-content:center;font-size:30px;color:#2b56a0;box-shadow:2.5px 2.5px 0 #2b2b2b">✶</div>
+        <h2 style="font-size:25px;margin:6px 0 0">Trip Splitter</h2>
+        <p style="font-size:16px;color:#8a8a86;margin:0;text-align:center">Sign in to split or check your share</p>
+      </div>
+      <div style="margin-top:8px"><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Your name</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px">Nga</div></div>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Phone or email</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px;color:#b6b5af">09xx xxx xxx</div></div>
+      <div style="background:#4a73c4;color:#fff;border:2.5px solid #2b2b2b;border-radius:13px;padding:11px;text-align:center;font-size:18px;box-shadow:2.5px 2.5px 0 #2b2b2b">Continue →</div>
+      <div style="background:#fdf3c7;border:1.5px solid #ddca73;border-radius:9px;padding:7px 10px;font-size:13px;line-height:1.35;color:#7a6a1c;margin-top:auto">One sign-in for everyone. Nga (organizer) lands on trip setup; everyone else lands on their own costs.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a9a96;flex:0 0 auto"><div style="font-size:30px;line-height:1">→</div><div style="font-size:12px;max-width:64px;text-align:center">as Nga</div></div>
+
+    <!-- PHONE 1 · Create trip -->
+    <div style="width:300px;flex:0 0 300px;min-height:610px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">1 · Create trip</p>
+      <h2 style="font-size:24px;margin:0">New trip</h2>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Trip name</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px">Da Lat Weekend</div></div>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Dates</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px;color:#8a8a86">Jun 6 – 8, 2026</div></div>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Currency</p><div style="border:2px solid #4a73c4;border-radius:11px;padding:9px 12px;background:#eef3fc;font-size:17px;color:#2b56a0;display:flex;justify-content:space-between;align-items:center"><span>{{ cur }}</span><span style="color:#4a73c4">▾</span></div></div>
+      <p style="font-size:13px;color:#9a9a96;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 0">Members</p>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <sc-for list="{{ setupMembers }}" as="m" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;align-items:center;border:2px solid #e2e1db;border-radius:10px;padding:8px 11px;background:#fff">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">{{ m.name }}</span><sc-if value="{{ m.payer }}" hint-placeholder-val="{{ true }}"><span style="font-size:11px;background:#4a73c4;color:#fff;border-radius:6px;padding:1px 7px">payer</span></sc-if></div>
+            <span style="color:#c8c7c1;font-size:18px">×</span>
+          </div>
+        </sc-for>
+        <div style="border:2px dashed #bdbcb6;border-radius:10px;padding:8px;text-align:center;color:#8a8a86;font-size:15px">+ Add member</div>
+      </div>
+      <div style="background:#4a73c4;color:#fff;border:2.5px solid #2b2b2b;border-radius:13px;padding:11px;text-align:center;font-size:18px;box-shadow:2.5px 2.5px 0 #2b2b2b;margin-top:auto">Start trip →</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a9a96;flex:0 0 auto"><div style="font-size:30px;line-height:1">→</div><div style="font-size:12px;max-width:60px;text-align:center">start trip</div></div>
+
+    <!-- PHONE 2 · Dashboard -->
+    <div style="width:300px;flex:0 0 300px;min-height:610px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">2 · Trip</p>
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:23px;margin:0">Da Lat Weekend</h2><span style="background:#eef3fc;border:2px solid #4a73c4;color:#2b56a0;border-radius:20px;padding:3px 11px;font-size:14px">{{ tripTotal }}</span></div>
+      <p style="font-size:13px;color:#9a9a96;text-transform:uppercase;letter-spacing:0.5px;margin:2px 0 0">Activities</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ dash }}" as="a" hint-placeholder-count="4">
+          <div style="display:flex;justify-content:space-between;align-items:center;border:2px solid #e2e1db;border-radius:12px;padding:9px 11px;background:#fff">
+            <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:16px">{{ a.name }}</span><span style="font-size:12px;color:#9a9a96">{{ a.meta }}</span></div>
+            <span style="font-size:15px;white-space:nowrap;padding-left:8px">{{ a.amt }}</span>
+          </div>
+        </sc-for>
+        <div style="border:2.5px dashed #4a73c4;color:#2b56a0;border-radius:13px;padding:11px;text-align:center;font-size:17px;background:#fff">+ Add activity</div>
+      </div>
+      <div style="background:#4a73c4;color:#fff;border:2.5px solid #2b2b2b;border-radius:13px;padding:11px;text-align:center;font-size:18px;box-shadow:2.5px 2.5px 0 #2b2b2b;margin-top:auto">View summary →</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a9a96;flex:0 0 auto"><div style="font-size:30px;line-height:1">→</div><div style="font-size:12px;max-width:64px;text-align:center">+ add activity</div></div>
+
+    <!-- PHONE 3 · Add activity -->
+    <div style="width:300px;flex:0 0 300px;min-height:610px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">3 · Add activity</p>
+      <h2 style="font-size:24px;margin:0">Add activity</h2>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">What was it?</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px">Dinner — Night 1</div></div>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Total amount</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px">{{ addAmt }}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><p style="font-size:13px;color:#9a9a96;text-transform:uppercase;letter-spacing:0.5px;margin:2px 0">Who joined?</p>
+        <div style="display:flex;gap:6px"><div onClick="{{ everyoneClick }}" style="border:2px solid #d3d2cc;border-radius:8px;padding:3px 9px;font-size:13px;color:#6b6b67;cursor:pointer;background:#fff">Everyone</div><div onClick="{{ noneClick }}" style="border:2px solid #d3d2cc;border-radius:8px;padding:3px 9px;font-size:13px;color:#6b6b67;cursor:pointer;background:#fff">None</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ chipList }}" as="c" hint-placeholder-count="5">
+          <div onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.name }}</div>
+        </sc-for>
+      </div>
+      <div style="border:2px solid #4a73c4;background:#eef3fc;border-radius:12px;padding:13px;text-align:center;font-size:18px;color:#2b56a0">{{ splitText }}</div>
+      <div style="background:#fdf3c7;border:1.5px solid #ddca73;border-radius:9px;padding:7px 10px;font-size:13px;line-height:1.35;color:#7a6a1c">Tap a name to include / exclude them. The split recalculates instantly — try it.</div>
+      <div style="background:#4a73c4;color:#fff;border:2.5px solid #2b2b2b;border-radius:13px;padding:11px;text-align:center;font-size:18px;box-shadow:2.5px 2.5px 0 #2b2b2b;margin-top:auto">Save activity</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a9a96;flex:0 0 auto"><div style="font-size:30px;line-height:1">→</div><div style="font-size:12px;max-width:64px;text-align:center">view summary</div></div>
+
+    <!-- PHONE 4 · Summary -->
+    <div style="width:300px;flex:0 0 300px;min-height:610px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">4 · Summary</p>
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:24px;margin:0">Summary</h2><span style="background:#eef3fc;border:2px solid #4a73c4;color:#2b56a0;border-radius:20px;padding:3px 11px;font-size:14px">{{ tripTotal }}</span></div>
+      <p style="font-size:13px;color:#9a9a96;text-transform:uppercase;letter-spacing:0.5px;margin:2px 0 0">Everyone owes Nga</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ owePeople }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ p.onClick }}" style="border:2px solid #e2e1db;border-radius:12px;background:#fff;overflow:hidden;cursor:pointer">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px">
+              <span style="font-size:17px">{{ p.name }}</span>
+              <span style="display:flex;align-items:center;gap:9px"><span style="font-size:17px;color:#2b56a0">{{ p.total }}</span><span style="color:#b6b5af;font-size:13px">{{ p.chev }}</span></span>
+            </div>
+            <sc-if value="{{ p.expanded }}" hint-placeholder-val="{{ true }}">
+              <div style="border-top:1.5px dashed #d8d7d1;padding:8px 12px;display:flex;flex-direction:column;gap:5px;background:#faf9f5">
+                <sc-for list="{{ p.items }}" as="it" hint-placeholder-count="3">
+                  <div style="display:flex;justify-content:space-between;font-size:14px;color:#6b6b67"><span>{{ it.n }}</span><span>{{ it.a }}</span></div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <div style="border:2px solid #4a73c4;border-radius:12px;background:#eef3fc;padding:10px 12px;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:16px;color:#2b56a0">Nga — paid everything</span>
+          <span style="font-size:13px;color:#5b7bb5">Paid {{ ngaPaid }} · gets back {{ ngaBack }}</span>
+        </div>
+      </div>
+      <div style="background:#fff;color:#2b2b2b;border:2.5px solid #2b2b2b;border-radius:13px;padding:10px;text-align:center;font-size:17px;margin-top:auto">⤴ Share summary</div>
+    </div>
+
+  </div>
+
+  <!-- ===== Section 2: Member ===== -->
+  <div style="display:flex;align-items:center;gap:11px;margin:44px 0 18px">
+    <div style="width:32px;height:32px;border-radius:50%;background:#2b2b2b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px">2</div>
+    <span style="font-size:25px">Member flow — a teammate checks their share</span>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:nowrap">
+
+    <!-- PHONE 5 · Member login -->
+    <div style="width:300px;flex:0 0 300px;min-height:540px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">0 · Sign in — as a member</p>
+      <h2 style="font-size:24px;margin:0">See your share</h2>
+      <p style="font-size:16px;color:#8a8a86;margin:0">Same sign-in screen — this time it's An, not Nga.</p>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Your name</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px">An</div></div>
+      <div><p style="font-size:13px;color:#9a9a96;margin:0 0 3px 2px">Phone or email</p><div style="border:2px solid #d3d2cc;border-radius:11px;padding:9px 12px;background:#fff;font-size:17px;color:#b6b5af">09xx xxx xxx</div></div>
+      <div style="background:#4a73c4;color:#fff;border:2.5px solid #2b2b2b;border-radius:13px;padding:11px;text-align:center;font-size:18px;box-shadow:2.5px 2.5px 0 #2b2b2b">View my costs →</div>
+      <div style="background:#fdf3c7;border:1.5px solid #ddca73;border-radius:9px;padding:7px 10px;font-size:13px;line-height:1.35;color:#7a6a1c;margin-top:auto">Members can only see their own costs. Only Nga can add or edit activities.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a9a96;flex:0 0 auto"><div style="font-size:30px;line-height:1">→</div><div style="font-size:12px;max-width:64px;text-align:center">view my costs</div></div>
+
+    <!-- PHONE 6 · My costs -->
+    <div style="width:300px;flex:0 0 300px;min-height:540px;background:#fdfdfb;border:2.5px solid #2b2b2b;border-radius:26px;box-shadow:6px 7px 0 rgba(43,43,43,0.13);padding:14px 15px 18px;display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#b6b5af;font-size:12px"><span>9:41</span><span style="letter-spacing:2px">• • •</span></div>
+      <p style="font-size:12px;color:#4a73c4;letter-spacing:0.6px;text-transform:uppercase;margin:0">Member · My costs</p>
+      <h2 style="font-size:24px;margin:0">Hi, An</h2>
+      <div style="border:2.5px solid #2b2b2b;border-radius:16px;background:#eef3fc;padding:16px;text-align:center;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:14px;color:#5b7bb5">You owe</span>
+        <span style="font-size:36px;color:#2b56a0;line-height:1.1">{{ myTotal }}</span>
+        <span style="font-size:14px;color:#5b7bb5">pay to Nga</span>
+      </div>
+      <p style="font-size:13px;color:#9a9a96;text-transform:uppercase;letter-spacing:0.5px;margin:2px 0 0">Activities you joined</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ myItems }}" as="it" hint-placeholder-count="4">
+          <div style="display:flex;justify-content:space-between;align-items:center;border:2px solid #e2e1db;border-radius:12px;padding:10px 12px;background:#fff"><span style="font-size:16px">{{ it.n }}</span><span style="font-size:15px;color:#2b56a0">{{ it.a }}</span></div>
+        </sc-for>
+      </div>
+      <p style="font-size:15px;color:#8a8a86;margin:auto 0 0">Pay Nga back whenever you can 🙂</p>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1480,&quot;height&quot;:880},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;₫&quot;,&quot;$&quot;,&quot;€&quot;,&quot;£&quot;],&quot;default&quot;:&quot;₫&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { chips: { 'Nga': true, 'An': true, 'Bình': true, 'Chi': false, 'Dũng': true }, expanded: 'An' };
+
+  toggleChip(k) { this.setState(s => ({ chips: { ...s.chips, [k]: !s.chips[k] } })); }
+  allChips(v) { const c = {}; ['Nga','An','Bình','Chi','Dũng'].forEach(k => c[k] = v); this.setState({ chips: c }); }
+  toggleExpand(k) { this.setState(s => ({ expanded: s.expanded === k ? null : k })); }
+
+  renderVals() {
+    const cur = this.props.currency || '₫';
+    const money = (n) => { const s = Math.round(n).toLocaleString('en-US'); return cur === '₫' ? s + ' ₫' : cur + s; };
+    const members = ['Nga', 'An', 'Bình', 'Chi', 'Dũng'];
+    const acts = [
+      { name: 'Dinner — Night 1', amt: 1200000, parts: ['Nga','An','Bình','Chi','Dũng'] },
+      { name: 'Car rental', amt: 800000, parts: ['Nga','An','Bình','Chi','Dũng'] },
+      { name: 'Cable car tickets', amt: 360000, parts: ['An','Chi','Dũng'] },
+      { name: 'Coffee & snacks', amt: 180000, parts: ['Nga','An','Bình'] },
+    ];
+
+    const owe = {}, items = {};
+    members.forEach(m => { owe[m] = 0; items[m] = []; });
+    let total = 0;
+    acts.forEach(a => {
+      total += a.amt;
+      const sh = Math.round(a.amt / a.parts.length);
+      a.parts.forEach(p => { owe[p] += sh; items[p].push({ n: a.name, a: money(sh) }); });
+    });
+
+    const dash = acts.map(a => ({
+      name: a.name,
+      meta: (a.parts.length === members.length ? 'Everyone' : a.parts.join(', ')) + ' · ' + a.parts.length + ' people',
+      amt: money(a.amt),
+    }));
+
+    const setupMembers = members.map(m => ({ name: m, payer: m === 'Nga' ? true : undefined }));
+
+    const chipOn = 'background:#4a73c4;color:#fff;border:2px solid #2b2b2b;border-radius:20px;padding:7px 13px;font-size:15px;cursor:pointer;box-shadow:1.5px 1.5px 0 #2b2b2b';
+    const chipOff = 'background:#fff;color:#8a8a86;border:2px dashed #bdbcb6;border-radius:20px;padding:7px 13px;font-size:15px;cursor:pointer';
+    const chipList = members.map(m => ({ key: m, name: m, style: this.state.chips[m] ? chipOn : chipOff, onClick: () => this.toggleChip(m) }));
+
+    const selCount = members.filter(m => this.state.chips[m]).length;
+    const addAmtN = 1200000;
+    const splitText = selCount > 0
+      ? 'Split ' + selCount + ' ways · ' + money(Math.round(addAmtN / selCount)) + ' each'
+      : 'Pick at least one person';
+
+    const owePeople = ['An','Bình','Chi','Dũng'].map(n => ({
+      key: n, name: n, total: money(owe[n]), items: items[n],
+      expanded: this.state.expanded === n,
+      chev: this.state.expanded === n ? '▴' : '▾',
+      onClick: () => this.toggleExpand(n),
+    }));
+
+    return {
+      cur,
+      tripTotal: money(total),
+      dash,
+      setupMembers,
+      chipList,
+      splitText,
+      addAmt: money(addAmtN),
+      everyoneClick: () => this.allChips(true),
+      noneClick: () => this.allChips(false),
+      owePeople,
+      ngaPaid: money(total),
+      ngaBack: money(total - owe['Nga']),
+      myTotal: money(owe['An']),
+      myItems: items['An'],
+    };
+  }
+}
+</script>
+</body>
+</html>
