@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import authRouter from './routes/auth.js';
 import tripRouter from './routes/trip.js';
 import activitiesRouter from './routes/activities.js';
+import summaryRouter from './routes/summary.js';
 
 export function buildApp() {
   const app = express();
@@ -12,6 +13,7 @@ export function buildApp() {
   app.use('/api/auth', authRouter);
   app.use('/api/trip', tripRouter);
   app.use('/api/activities', activitiesRouter);
+  app.use('/api/summary', summaryRouter);
   return app;
 }
 
