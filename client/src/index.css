@@ -1,0 +1,22 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Patrick Hand', system-ui, sans-serif;
+  background: #ecebe7;
+  color: #2b2b2b;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --blue: #4a73c4;
+  --blue-dark: #2b56a0;
+  --blue-bg: #eef3fc;
+  --card-bg: #fdfdfb;
+  --border: #2b2b2b;
+  --border-light: #e2e1db;
+  --text-muted: #9a9a96;
+  --yellow-bg: #fdf3c7;
+  --yellow-border: #ddca73;
+  --yellow-text: #7a6a1c;
+}
