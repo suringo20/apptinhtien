@@ -25,7 +25,7 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignIn />} />
-        <Route path="/trip/new" element={<OrganizerRoute><CreateTrip /></OrganizerRoute>} />
+        <Route path="/trip/new" element={<CreateTrip />} />
         <Route path="/trip" element={<OrganizerRoute><Dashboard /></OrganizerRoute>} />
         <Route path="/trip/activity/new" element={<OrganizerRoute><AddActivity /></OrganizerRoute>} />
         <Route path="/trip/activity/:id/edit" element={<OrganizerRoute><AddActivity /></OrganizerRoute>} />

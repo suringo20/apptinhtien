@@ -23,7 +23,12 @@ export function SignIn() {
       saveAuth(result);
       navigate(result.isOrganizer ? '/trip' : '/me');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign-in failed');
+      const msg = err instanceof Error ? err.message : 'Sign-in failed';
+      if (msg === 'No active trip') {
+        navigate('/trip/new');
+        return;
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
