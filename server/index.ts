@@ -1,10 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import authRouter from './routes/auth.js';
 import tripRouter from './routes/trip.js';
 import activitiesRouter from './routes/activities.js';
 import summaryRouter from './routes/summary.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export function buildApp() {
   const app = express();
@@ -14,6 +17,13 @@ export function buildApp() {
   app.use('/api/trip', tripRouter);
   app.use('/api/activities', activitiesRouter);
   app.use('/api/summary', summaryRouter);
+
+  if (process.env.NODE_ENV === 'production') {
+    const staticDir = path.join(__dirname, '../client/dist');
+    app.use(express.static(staticDir));
+    app.get('*', (_req, res) => res.sendFile(path.join(staticDir, 'index.html')));
+  }
+
   return app;
 }
 
