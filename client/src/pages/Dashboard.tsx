@@ -69,6 +69,9 @@ export function Dashboard() {
       </div>
 
       <Button onClick={() => navigate('/trip/summary')} style={{ marginTop: 24 }}>View summary →</Button>
+      <button onClick={() => navigate('/join')} style={{ marginTop: 12, background: 'none', border: 'none', color: '#8a8a86', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', width: '100%' }}>
+        ← Switch trip
+      </button>
     </MobileShell>
   );
 }

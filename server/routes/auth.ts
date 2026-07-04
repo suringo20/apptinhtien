@@ -66,4 +66,20 @@ router.post('/join', (req, res) => {
   res.json({ memberId: member.id, tripId: trip.id, tripCode: tripCode.toUpperCase(), isOrganizer });
 });
 
+// Get all trips the user is a member of (matched by contact)
+router.get('/my-trips', (req, res) => {
+  const userId = Number(req.query['userId']);
+  if (!userId) { res.status(400).json({ error: 'userId required' }); return; }
+  const db = getDb();
+  const user = db.prepare('SELECT contact FROM users WHERE id = ?').get(userId) as { contact: string } | undefined;
+  if (!user) { res.status(404).json({ error: 'User not found' }); return; }
+  const trips = db.prepare(`
+    SELECT t.id, t.code, t.name, t.start_date, t.end_date, t.currency, m.is_organizer
+    FROM trips t
+    JOIN members m ON m.trip_id = t.id AND m.contact = ?
+    ORDER BY t.id DESC
+  `).all(user.contact);
+  res.json(trips);
+});
+
 export default router;

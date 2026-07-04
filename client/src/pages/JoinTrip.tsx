@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { getUser, saveAuth } from '../lib/auth';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Field, Input } from '../components/Field';
+
+type TripRow = { id: number; code: string; name: string; start_date: string | null; end_date: string | null; currency: string; is_organizer: number };
 
 export function JoinTrip() {
   const navigate = useNavigate();
@@ -13,11 +15,15 @@ export function JoinTrip() {
   const [orgCode, setOrgCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [myTrips, setMyTrips] = useState<TripRow[]>([]);
+  const [joiningId, setJoiningId] = useState<number | null>(null);
 
-  if (!user) {
-    navigate('/login');
-    return null;
-  }
+  useEffect(() => {
+    if (!user) { navigate('/login'); return; }
+    api.getMyTrips(user.userId).then(setMyTrips).catch(() => {});
+  }, []);
+
+  if (!user) return null;
 
   async function handleJoin(e: React.FormEvent) {
     e.preventDefault();
@@ -34,6 +40,19 @@ export function JoinTrip() {
     }
   }
 
+  async function reopenTrip(trip: TripRow) {
+    setJoiningId(trip.id);
+    try {
+      const result = await api.joinTrip({ tripCode: trip.code, userId: user!.userId });
+      saveAuth(result);
+      navigate(result.isOrganizer ? '/trip' : '/me');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to open trip');
+    } finally {
+      setJoiningId(null);
+    }
+  }
+
   return (
     <MobileShell>
       <div style={{ marginTop: 32 }}>
@@ -41,7 +60,38 @@ export function JoinTrip() {
         <p style={{ fontSize: 17, fontWeight: 600, margin: '0 0 28px' }}>{user.name} · {user.contact}</p>
       </div>
 
-      <h2 style={{ fontSize: 22, margin: '0 0 20px' }}>Enter a trip code</h2>
+      {myTrips.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 10px' }}>Your trips</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {myTrips.map(trip => (
+              <button
+                key={trip.id}
+                onClick={() => reopenTrip(trip)}
+                disabled={joiningId === trip.id}
+                style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  background: '#fff', border: '2px solid var(--border)', borderRadius: 13,
+                  padding: '12px 16px', cursor: 'pointer', fontFamily: 'inherit',
+                  boxShadow: '3px 3px 0 var(--border)', textAlign: 'left',
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>{trip.name}</div>
+                  <div style={{ fontSize: 12, color: '#8a8a86', marginTop: 2 }}>
+                    {trip.is_organizer ? 'Organizer' : 'Member'} · {trip.code}
+                  </div>
+                </div>
+                <span style={{ color: 'var(--blue)', fontSize: 14 }}>
+                  {joiningId === trip.id ? '…' : 'Open →'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <h2 style={{ fontSize: 18, margin: '0 0 16px' }}>Join a new trip</h2>
 
       <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <Field label="Trip code">

@@ -26,6 +26,9 @@ export const api = {
   joinTrip: (body: { tripCode: string; userId: number; orgCode?: string }) =>
     apiFetch<AuthResult>('/auth/join', { method: 'POST', body: JSON.stringify(body) }),
 
+  getMyTrips: (userId: number) =>
+    apiFetch<{ id: number; code: string; name: string; start_date: string | null; end_date: string | null; currency: string; is_organizer: number }[]>(`/auth/my-trips?userId=${userId}`),
+
   getTrip: () => apiFetch<Trip>('/trip'),
 
   createTrip: (body: {
