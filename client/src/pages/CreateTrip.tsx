@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { getUser, saveAuth } from '../lib/auth';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Field, Input } from '../components/Field';
@@ -44,6 +45,14 @@ export function CreateTrip() {
         start_date: startDate || undefined,
         end_date: endDate || undefined,
       });
+      // Auto-join as organizer if logged in
+      const user = getUser();
+      if (user) {
+        const auth = await api.joinTrip({ tripCode: result.code, userId: user.userId, orgCode });
+        saveAuth(auth);
+        navigate('/trip');
+        return;
+      }
       setCreatedCode(result.code);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create trip');
