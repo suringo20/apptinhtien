@@ -44,6 +44,7 @@ export function CreateTrip() {
         members: members.filter(m => m.name && m.contact),
         start_date: startDate || undefined,
         end_date: endDate || undefined,
+        userId: user?.userId,
       });
       // Auto-join as organizer if logged in
       const user = getUser();
@@ -100,7 +101,7 @@ export function CreateTrip() {
           <Input type="password" placeholder="Set a secret code for organizer access" value={orgCode} onChange={e => setOrgCode(e.target.value)} required />
         </Field>
 
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '4px 0 0' }}>Members</p>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '4px 0 0' }}>Other members (you are added automatically)</p>
         {members.map((m, i) => (
           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
             <Field label="Name"><Input placeholder="Name" value={m.name} onChange={e => updateMember(i, 'name', e.target.value)} /></Field>

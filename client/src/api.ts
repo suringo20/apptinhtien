@@ -38,6 +38,7 @@ export const api = {
     members: { name: string; contact: string }[];
     start_date?: string;
     end_date?: string;
+    userId?: number;
   }) => apiFetch<{ id: number; code: string }>('/trip', { method: 'POST', body: JSON.stringify(body) }),
 
   getActivities: () => apiFetch<Activity[]>('/activities'),
