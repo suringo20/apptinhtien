@@ -62,7 +62,9 @@ router.post('/join', (req, res) => {
     res.status(404).json({ error: 'You are not a member of this trip. Ask the organizer to add your contact.' });
     return;
   }
-  const isOrganizer = orgCode ? bcrypt.compareSync(orgCode, trip.organizer_code) : false;
+  // Use DB organizer flag; orgCode can elevate to organizer if not already set
+  const isOrganizer = member.is_organizer === 1 ||
+    (!!orgCode && bcrypt.compareSync(orgCode, trip.organizer_code));
   res.json({ memberId: member.id, tripId: trip.id, tripCode: tripCode.toUpperCase(), isOrganizer });
 });
 

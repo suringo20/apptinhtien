@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import type { MyCosts as MyCostsData, Trip } from '../types';
 import { MobileShell } from '../components/MobileShell';
+import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { getAuth } from '../lib/auth';
 
@@ -11,6 +13,7 @@ function formatAmount(n: number, currency: string) {
 }
 
 export function MyCosts() {
+  const navigate = useNavigate();
   const [data, setData] = useState<MyCostsData | null>(null);
   const [trip, setTrip] = useState<Trip | null>(null);
   const [error, setError] = useState('');
@@ -54,6 +57,16 @@ export function MyCosts() {
       <p style={{ fontSize: 15, color: '#8a8a86', marginTop: 'auto', paddingTop: 24 }}>
         Pay {organizer?.name ?? 'the organizer'} back whenever you can 🙂
       </p>
+
+      {auth?.isOrganizer && (
+        <Button onClick={() => navigate('/trip')} style={{ marginTop: 16 }}>
+          Manage activities →
+        </Button>
+      )}
+
+      <button onClick={() => navigate('/join')} style={{ marginTop: 12, background: 'none', border: 'none', color: '#8a8a86', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', width: '100%' }}>
+        ← Switch trip
+      </button>
     </MobileShell>
   );
 }
