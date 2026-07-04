@@ -8,7 +8,7 @@ import { Field, Input } from '../components/Field';
 
 export function SignIn() {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [tripCode, setTripCode] = useState('');
   const [contact, setContact] = useState('');
   const [orgCode, setOrgCode] = useState('');
   const [error, setError] = useState('');
@@ -19,16 +19,11 @@ export function SignIn() {
     setError('');
     setLoading(true);
     try {
-      const result = await api.signIn({ name, contact, orgCode: orgCode || undefined });
+      const result = await api.signIn({ name: '', contact, orgCode: orgCode || undefined, tripCode: tripCode.trim().toUpperCase() });
       saveAuth(result);
       navigate(result.isOrganizer ? '/trip' : '/me');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Sign-in failed';
-      if (msg === 'No active trip') {
-        navigate('/trip/new');
-        return;
-      }
-      setError(msg);
+      setError(err instanceof Error ? err.message : 'Sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -43,8 +38,8 @@ export function SignIn() {
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 28 }}>
-        <Field label="Your name">
-          <Input placeholder="Your name" value={name} onChange={e => setName(e.target.value)} required />
+        <Field label="Trip code">
+          <Input placeholder="e.g. DALAT6" value={tripCode} onChange={e => setTripCode(e.target.value)} required style={{ textTransform: 'uppercase', letterSpacing: 2 }} />
         </Field>
         <Field label="Phone or email">
           <Input placeholder="Phone or email" value={contact} onChange={e => setContact(e.target.value)} required />
@@ -56,8 +51,14 @@ export function SignIn() {
         <Button type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Continue →'}</Button>
       </form>
 
+      <div style={{ marginTop: 16, textAlign: 'center' }}>
+        <button onClick={() => navigate('/trip/new')} style={{ background: 'none', border: 'none', color: 'var(--blue)', fontSize: 15, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>
+          Create a new trip
+        </button>
+      </div>
+
       <div style={{ background: 'var(--yellow-bg)', border: '1.5px solid var(--yellow-border)', borderRadius: 9, padding: '7px 10px', fontSize: 13, lineHeight: 1.35, color: 'var(--yellow-text)', marginTop: 16 }}>
-        One sign-in for everyone. Organizers enter the organizer code; everyone else just enters their name and contact.
+        Enter your trip code and the phone/email you were added with. Organizers also enter the organizer code.
       </div>
     </MobileShell>
   );

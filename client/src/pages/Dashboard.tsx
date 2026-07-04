@@ -37,7 +37,10 @@ export function Dashboard() {
   return (
     <MobileShell>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '20px 0 4px' }}>
-        <h2 style={{ fontSize: 24, margin: 0 }}>{trip.name}</h2>
+        <div>
+          <h2 style={{ fontSize: 24, margin: 0 }}>{trip.name}</h2>
+          <span style={{ fontSize: 12, color: '#8a8a86', letterSpacing: 1 }}>Code: <strong>{trip.code}</strong></span>
+        </div>
         <span style={{ background: 'var(--blue-bg)', border: '2px solid var(--blue)', color: 'var(--blue-dark)', borderRadius: 20, padding: '3px 11px', fontSize: 14 }}>
           {formatAmount(total, trip.currency)}
         </span>

@@ -32,6 +32,7 @@ function migrate(db: Database.Database): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS trips (
       id             INTEGER PRIMARY KEY AUTOINCREMENT,
+      code           TEXT NOT NULL DEFAULT '',
       name           TEXT NOT NULL,
       start_date     TEXT,
       end_date       TEXT,

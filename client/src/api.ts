@@ -17,7 +17,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  signIn: (body: { name: string; contact: string; orgCode?: string }) =>
+  signIn: (body: { name: string; contact: string; orgCode?: string; tripCode: string }) =>
     apiFetch<AuthResult>('/auth/signin', { method: 'POST', body: JSON.stringify(body) }),
 
   getTrip: () => apiFetch<Trip>('/trip'),
@@ -29,7 +29,7 @@ export const api = {
     members: { name: string; contact: string }[];
     start_date?: string;
     end_date?: string;
-  }) => apiFetch<{ id: number }>('/trip', { method: 'POST', body: JSON.stringify(body) }),
+  }) => apiFetch<{ id: number; code: string }>('/trip', { method: 'POST', body: JSON.stringify(body) }),
 
   getActivities: () => apiFetch<Activity[]>('/activities'),
 

@@ -17,6 +17,7 @@ export function CreateTrip() {
   const [members, setMembers] = useState<MemberRow[]>([{ name: '', contact: '' }]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [createdCode, setCreatedCode] = useState('');
 
   function addMember() {
     setMembers(m => [...m, { name: '', contact: '' }]);
@@ -35,7 +36,7 @@ export function CreateTrip() {
     setError('');
     setLoading(true);
     try {
-      await api.createTrip({
+      const result = await api.createTrip({
         name: tripName,
         currency,
         orgCode,
@@ -43,12 +44,31 @@ export function CreateTrip() {
         start_date: startDate || undefined,
         end_date: endDate || undefined,
       });
-      navigate('/trip');
+      setCreatedCode(result.code);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create trip');
     } finally {
       setLoading(false);
     }
+  }
+
+  if (createdCode) {
+    return (
+      <MobileShell>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginTop: 48, textAlign: 'center' }}>
+          <div style={{ fontSize: 48 }}>🎉</div>
+          <h2 style={{ fontSize: 24, margin: 0 }}>Trip created!</h2>
+          <p style={{ color: '#8a8a86', margin: 0 }}>Share this code with your group</p>
+          <div style={{ background: 'var(--blue-bg)', border: '2.5px solid var(--blue)', borderRadius: 14, padding: '18px 32px', fontSize: 36, fontWeight: 700, letterSpacing: 6, color: 'var(--blue-dark)', boxShadow: '3px 3px 0 var(--border)' }}>
+            {createdCode}
+          </div>
+          <p style={{ fontSize: 13, color: '#8a8a86', margin: 0, lineHeight: 1.5 }}>
+            Everyone enters this code on the sign-in screen along with their phone/email to access the trip.
+          </p>
+          <Button onClick={() => navigate('/')} style={{ marginTop: 8, width: '100%' }}>Go to sign in →</Button>
+        </div>
+      </MobileShell>
+    );
   }
 
   return (

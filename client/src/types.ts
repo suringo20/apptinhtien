@@ -7,6 +7,7 @@ export interface Member {
 
 export interface Trip {
   id: number;
+  code: string;
   name: string;
   start_date: string | null;
   end_date: string | null;
@@ -41,5 +42,6 @@ export interface MyCosts {
 export interface AuthResult {
   memberId: number;
   tripId: number;
+  tripCode: string;
   isOrganizer: boolean;
 }
