@@ -1,22 +1,30 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { getAuth } from './lib/auth';
-import { SignIn } from './pages/SignIn';
+import { getAuth, getUser } from './lib/auth';
+import { Register } from './pages/Register';
+import { Login } from './pages/Login';
+import { JoinTrip } from './pages/JoinTrip';
 import { CreateTrip } from './pages/CreateTrip';
 import { Dashboard } from './pages/Dashboard';
 import { AddActivity } from './pages/AddActivity';
 import { Summary } from './pages/Summary';
 import { MyCosts } from './pages/MyCosts';
 
+function UserRoute({ children }: { children: React.ReactNode }) {
+  const user = getUser();
+  if (!user) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
 function OrganizerRoute({ children }: { children: React.ReactNode }) {
   const auth = getAuth();
-  if (!auth) return <Navigate to="/" replace />;
+  if (!auth) return <Navigate to="/join" replace />;
   if (!auth.isOrganizer) return <Navigate to="/me" replace />;
   return <>{children}</>;
 }
 
 function MemberRoute({ children }: { children: React.ReactNode }) {
   const auth = getAuth();
-  if (!auth) return <Navigate to="/" replace />;
+  if (!auth) return <Navigate to="/join" replace />;
   return <>{children}</>;
 }
 
@@ -24,8 +32,10 @@ export function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/trip/new" element={<CreateTrip />} />
+        <Route path="/" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/join" element={<UserRoute><JoinTrip /></UserRoute>} />
+        <Route path="/trip/new" element={<UserRoute><CreateTrip /></UserRoute>} />
         <Route path="/trip" element={<OrganizerRoute><Dashboard /></OrganizerRoute>} />
         <Route path="/trip/activity/new" element={<OrganizerRoute><AddActivity /></OrganizerRoute>} />
         <Route path="/trip/activity/:id/edit" element={<OrganizerRoute><AddActivity /></OrganizerRoute>} />

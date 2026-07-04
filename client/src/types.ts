@@ -39,6 +39,12 @@ export interface MyCosts {
   activities: { name: string; share: number }[];
 }
 
+export interface UserSession {
+  userId: number;
+  name: string;
+  contact: string;
+}
+
 export interface AuthResult {
   memberId: number;
   tripId: number;

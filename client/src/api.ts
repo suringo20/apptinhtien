@@ -1,5 +1,5 @@
 import { getAuth } from './lib/auth';
-import type { Trip, Activity, Summary, MyCosts, AuthResult } from './types';
+import type { Trip, Activity, Summary, MyCosts, AuthResult, UserSession } from './types';
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const auth = getAuth();
@@ -17,8 +17,14 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  signIn: (body: { name: string; contact: string; orgCode?: string; tripCode: string }) =>
-    apiFetch<AuthResult>('/auth/signin', { method: 'POST', body: JSON.stringify(body) }),
+  register: (body: { name: string; contact: string; password: string }) =>
+    apiFetch<{ userId: number }>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
+
+  login: (body: { contact: string; password: string }) =>
+    apiFetch<UserSession>('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+
+  joinTrip: (body: { tripCode: string; userId: number; orgCode?: string }) =>
+    apiFetch<AuthResult>('/auth/join', { method: 'POST', body: JSON.stringify(body) }),
 
   getTrip: () => apiFetch<Trip>('/trip'),
 

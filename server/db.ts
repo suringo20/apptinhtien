@@ -30,6 +30,14 @@ export function resetDb(): void {
 
 function migrate(db: Database.Database): void {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      name          TEXT NOT NULL,
+      contact       TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      created_at    TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS trips (
       id             INTEGER PRIMARY KEY AUTOINCREMENT,
       code           TEXT NOT NULL DEFAULT '',
