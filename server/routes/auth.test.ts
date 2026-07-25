@@ -13,7 +13,7 @@ async function register(contact: string, name = 'User', password = 'pw123') {
 }
 
 describe('POST /api/auth/register', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
   it('creates a user and returns userId', async () => {
     const res = await register('0901000001', 'Nga');
@@ -34,7 +34,7 @@ describe('POST /api/auth/register', () => {
 });
 
 describe('POST /api/auth/login', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
   it('returns userId and name on correct credentials', async () => {
     await register('0901000001', 'Nga', 'secret123');
@@ -63,7 +63,7 @@ describe('POST /api/auth/login', () => {
 });
 
 describe('POST /api/auth/join', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
   async function setupTrip() {
     // Organizer registers, then creates a trip linked to their account.
@@ -119,7 +119,7 @@ describe('POST /api/auth/join', () => {
 });
 
 describe('GET /api/auth/my-trips', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
   it('lists trips the user belongs to', async () => {
     const org = await register('0901000001', 'Nga');

@@ -1,87 +1,93 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import { getDb } from '../db.js';
+import { query, one } from '../db.js';
+import { ah } from '../lib/asyncHandler.js';
 
 const router = Router();
 
-router.post('/register', (req, res) => {
+router.post('/register', ah(async (req, res) => {
   const { name, contact, password } = req.body as { name: string; contact: string; password: string };
   if (!name || !contact || !password) {
     res.status(400).json({ error: 'name, contact, and password required' });
     return;
   }
-  const db = getDb();
-  const existing = db.prepare('SELECT id FROM users WHERE contact = ?').get(contact);
+  const existing = await one('SELECT id FROM users WHERE contact = $1', [contact]);
   if (existing) {
     res.status(409).json({ error: 'Account already exists with this contact' });
     return;
   }
   const hash = bcrypt.hashSync(password, 10);
-  const result = db.prepare('INSERT INTO users (name, contact, password_hash) VALUES (?, ?, ?)').run(name, contact, hash);
-  res.status(201).json({ userId: result.lastInsertRowid });
-});
+  const row = await one<{ id: number }>(
+    'INSERT INTO users (name, contact, password_hash) VALUES ($1, $2, $3) RETURNING id',
+    [name, contact, hash]
+  );
+  res.status(201).json({ userId: row!.id });
+}));
 
-router.post('/login', (req, res) => {
+router.post('/login', ah(async (req, res) => {
   const { contact, password } = req.body as { contact: string; password: string };
   if (!contact || !password) {
     res.status(400).json({ error: 'contact and password required' });
     return;
   }
-  const db = getDb();
-  const user = db.prepare('SELECT id, name, password_hash FROM users WHERE contact = ?').get(contact) as
-    | { id: number; name: string; password_hash: string } | undefined;
+  const user = await one<{ id: number; name: string; password_hash: string }>(
+    'SELECT id, name, password_hash FROM users WHERE contact = $1',
+    [contact]
+  );
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     res.status(401).json({ error: 'Invalid contact or password' });
     return;
   }
   res.json({ userId: user.id, name: user.name, contact });
-});
+}));
 
 // Join a trip using trip code — matches user's contact against trip members
-router.post('/join', (req, res) => {
+router.post('/join', ah(async (req, res) => {
   const { tripCode, userId, orgCode } = req.body as { tripCode: string; userId: number; orgCode?: string };
   if (!tripCode || !userId) {
     res.status(400).json({ error: 'tripCode and userId required' });
     return;
   }
-  const db = getDb();
-  const user = db.prepare('SELECT contact FROM users WHERE id = ?').get(userId) as { contact: string } | undefined;
+  const user = await one<{ contact: string }>('SELECT contact FROM users WHERE id = $1', [userId]);
   if (!user) {
     res.status(401).json({ error: 'Invalid user' });
     return;
   }
-  const trip = db.prepare('SELECT id, organizer_code FROM trips WHERE code = ?').get(tripCode.toUpperCase()) as
-    | { id: number; organizer_code: string } | undefined;
+  const trip = await one<{ id: number; organizer_code: string }>(
+    'SELECT id, organizer_code FROM trips WHERE code = $1',
+    [tripCode.toUpperCase()]
+  );
   if (!trip) {
     res.status(404).json({ error: 'Trip not found' });
     return;
   }
-  const member = db.prepare('SELECT id, is_organizer FROM members WHERE trip_id = ? AND contact = ?')
-    .get(trip.id, user.contact) as { id: number; is_organizer: number } | undefined;
+  const member = await one<{ id: number; is_organizer: number }>(
+    'SELECT id, is_organizer FROM members WHERE trip_id = $1 AND contact = $2',
+    [trip.id, user.contact]
+  );
   if (!member) {
     res.status(404).json({ error: 'You are not a member of this trip. Ask the organizer to add your contact.' });
     return;
   }
-  // Use DB organizer flag; orgCode can elevate to organizer if not already set
+  // Use DB organizer flag; orgCode can elevate to organizer if it matches
   const isOrganizer = member.is_organizer === 1 ||
     (!!orgCode && bcrypt.compareSync(orgCode, trip.organizer_code));
   res.json({ memberId: member.id, tripId: trip.id, tripCode: tripCode.toUpperCase(), isOrganizer });
-});
+}));
 
 // Get all trips the user is a member of (matched by contact)
-router.get('/my-trips', (req, res) => {
+router.get('/my-trips', ah(async (req, res) => {
   const userId = Number(req.query['userId']);
   if (!userId) { res.status(400).json({ error: 'userId required' }); return; }
-  const db = getDb();
-  const user = db.prepare('SELECT contact FROM users WHERE id = ?').get(userId) as { contact: string } | undefined;
+  const user = await one<{ contact: string }>('SELECT contact FROM users WHERE id = $1', [userId]);
   if (!user) { res.status(404).json({ error: 'User not found' }); return; }
-  const trips = db.prepare(`
+  const trips = await query(`
     SELECT t.id, t.code, t.name, t.start_date, t.end_date, t.currency, m.is_organizer
     FROM trips t
-    JOIN members m ON m.trip_id = t.id AND m.contact = ?
+    JOIN members m ON m.trip_id = t.id AND m.contact = $1
     ORDER BY t.id DESC
-  `).all(user.contact);
+  `, [user.contact]);
   res.json(trips);
-});
+}));
 
 export default router;

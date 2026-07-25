@@ -1,27 +1,25 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getDb, resetDb } from './db.js';
+import { query, one, resetDb } from './db.js';
 
 describe('db schema', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
-  it('creates all four tables', () => {
-    const db = getDb();
-    const tables = db
-      .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
-      .all() as { name: string }[];
-    const names = tables.map((t) => t.name);
+  it('creates all five tables', async () => {
+    const tables = await query<{ table_name: string }>(
+      `SELECT table_name FROM information_schema.tables
+       WHERE table_schema = 'public' ORDER BY table_name`
+    );
+    const names = tables.map((t) => t.table_name);
+    expect(names).toContain('users');
     expect(names).toContain('trips');
     expect(names).toContain('members');
     expect(names).toContain('activities');
     expect(names).toContain('activity_members');
   });
 
-  it('inserts and retrieves a trip', () => {
-    const db = getDb();
-    db.prepare(
-      "INSERT INTO trips (name, currency, organizer_code) VALUES ('Da Lat', '₫', 'hash')"
-    ).run();
-    const trip = db.prepare('SELECT * FROM trips').get() as { name: string };
-    expect(trip.name).toBe('Da Lat');
+  it('inserts and retrieves a trip', async () => {
+    await query("INSERT INTO trips (name, currency, organizer_code) VALUES ('Da Lat', '₫', 'hash')");
+    const trip = await one<{ name: string }>('SELECT * FROM trips');
+    expect(trip!.name).toBe('Da Lat');
   });
 });

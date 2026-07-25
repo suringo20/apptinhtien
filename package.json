@@ -1,6 +1,7 @@
 {
   "name": "trip-splitter",
   "private": true,
+  "workspaces": ["client", "server"],
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client && npm run build --prefix server",

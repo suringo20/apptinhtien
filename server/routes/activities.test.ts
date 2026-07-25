@@ -1,29 +1,31 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { buildApp } from '../index.js';
-import { getDb, resetDb } from '../db.js';
+import { query, one, resetDb } from '../db.js';
 import bcrypt from 'bcryptjs';
 
 let orgMemberId: number;
 let memberMemberId: number;
 let tripId: number;
 
-beforeEach(() => {
-  resetDb();
-  const db = getDb();
+async function addMember(tid: number, name: string, contact: string, org: number): Promise<number> {
+  const row = await one<{ id: number }>(
+    'INSERT INTO members (trip_id, name, contact, is_organizer) VALUES ($1, $2, $3, $4) RETURNING id',
+    [tid, name, contact, org]
+  );
+  return row!.id;
+}
+
+beforeEach(async () => {
+  await resetDb();
   const hash = bcrypt.hashSync('secret', 10);
-  const t = db
-    .prepare("INSERT INTO trips (name, currency, organizer_code) VALUES ('T', '₫', ?)")
-    .run(hash);
-  tripId = t.lastInsertRowid as number;
-  const o = db
-    .prepare('INSERT INTO members (trip_id, name, contact, is_organizer) VALUES (?, ?, ?, ?)')
-    .run(tripId, 'Nga', 'nga@x', 1);
-  orgMemberId = o.lastInsertRowid as number;
-  const m = db
-    .prepare('INSERT INTO members (trip_id, name, contact, is_organizer) VALUES (?, ?, ?, ?)')
-    .run(tripId, 'An', 'an@x', 0);
-  memberMemberId = m.lastInsertRowid as number;
+  const t = await one<{ id: number }>(
+    "INSERT INTO trips (name, currency, organizer_code) VALUES ('T', '₫', $1) RETURNING id",
+    [hash]
+  );
+  tripId = t!.id;
+  orgMemberId = await addMember(tripId, 'Nga', 'nga@x', 1);
+  memberMemberId = await addMember(tripId, 'An', 'an@x', 0);
 });
 
 describe('activity routes', () => {
@@ -78,14 +80,15 @@ describe('activity routes — multi-trip isolation', () => {
   let tripB: number;
   let orgB: number;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // A SECOND, newer trip exists — this used to hijack "latest trip" logic.
-    const db = getDb();
     const hash = bcrypt.hashSync('s', 10);
-    const t = db.prepare("INSERT INTO trips (name, currency, organizer_code) VALUES ('B', '₫', ?)").run(hash);
-    tripB = t.lastInsertRowid as number;
-    orgB = db.prepare('INSERT INTO members (trip_id, name, contact, is_organizer) VALUES (?,?,?,?)')
-      .run(tripB, 'Bob', 'bob@x', 1).lastInsertRowid as number;
+    const t = await one<{ id: number }>(
+      "INSERT INTO trips (name, currency, organizer_code) VALUES ('B', '₫', $1) RETURNING id",
+      [hash]
+    );
+    tripB = t!.id;
+    orgB = await addMember(tripB, 'Bob', 'bob@x', 1);
   });
 
   it('POST attaches the activity to the organizer\'s OWN trip, not the newest one', async () => {
@@ -95,8 +98,8 @@ describe('activity routes — multi-trip isolation', () => {
       .set('x-member-id', String(orgMemberId)) // organizer of trip A (older)
       .send({ name: 'AliceDinner', totalAmount: 100, memberIds: [orgMemberId] });
     expect(created.status).toBe(201);
-    const row = getDb().prepare('SELECT trip_id FROM activities WHERE id = ?').get(created.body.id) as { trip_id: number };
-    expect(row.trip_id).toBe(tripId); // trip A, not trip B
+    const row = await one<{ trip_id: number }>('SELECT trip_id FROM activities WHERE id = $1', [created.body.id]);
+    expect(row!.trip_id).toBe(tripId); // trip A, not trip B
   });
 
   it('GET only returns the caller\'s own trip activities', async () => {
@@ -120,7 +123,7 @@ describe('activity routes — multi-trip isolation', () => {
     const res = await request(app).delete(`/api/activities/${created.body.id}`).set('x-member-id', String(orgMemberId));
     expect(res.status).toBe(404);
     // still there
-    expect(getDb().prepare('SELECT id FROM activities WHERE id = ?').get(created.body.id)).toBeTruthy();
+    expect(await one('SELECT id FROM activities WHERE id = $1', [created.body.id])).toBeTruthy();
   });
 
   it('rejects participants who are not members of the trip', async () => {

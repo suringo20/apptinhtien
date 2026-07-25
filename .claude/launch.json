@@ -4,14 +4,15 @@
     {
       "name": "server",
       "runtimeExecutable": "/private/tmp/node-v20.18.0-darwin-arm64/bin/node",
-      "runtimeArgs": ["/Users/anhthungo/Claude/Projects/AppTinhTien/server/node_modules/.bin/tsx", "index.ts"],
+      "runtimeArgs": ["/Users/anhthungo/Claude/Projects/AppTinhTien/node_modules/.bin/tsx", "index.ts"],
       "port": 3000,
-      "cwd": "/Users/anhthungo/Claude/Projects/AppTinhTien/server"
+      "cwd": "/Users/anhthungo/Claude/Projects/AppTinhTien/server",
+      "env": { "PGLITE_PATH": "/Users/anhthungo/Claude/Projects/AppTinhTien/.pglite/dev" }
     },
     {
       "name": "client",
       "runtimeExecutable": "/private/tmp/node-v20.18.0-darwin-arm64/bin/node",
-      "runtimeArgs": ["/Users/anhthungo/Claude/Projects/AppTinhTien/client/node_modules/.bin/vite"],
+      "runtimeArgs": ["/Users/anhthungo/Claude/Projects/AppTinhTien/node_modules/.bin/vite"],
       "port": 5173,
       "cwd": "/Users/anhthungo/Claude/Projects/AppTinhTien/client"
     }

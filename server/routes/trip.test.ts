@@ -7,7 +7,7 @@ const ORG_CODE = 'secret123';
 const app = () => buildApp();
 
 describe('trip routes', () => {
-  beforeEach(() => resetDb());
+  beforeEach(async () => { await resetDb(); });
 
   it('POST /api/trip creates a trip and returns an id and code', async () => {
     const res = await request(app()).post('/api/trip').send({
