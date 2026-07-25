@@ -6,7 +6,7 @@ import * as apiModule from '../api';
 import type { Trip } from '../types';
 
 const mockTrip: Trip = {
-  id: 1, name: 'T', start_date: null, end_date: null, currency: '₫',
+  id: 1, code: 'ABC123', name: 'T', start_date: null, end_date: null, currency: '₫',
   members: [
     { id: 1, name: 'Nga', contact: 'nga', is_organizer: 1 },
     { id: 2, name: 'An', contact: 'an', is_organizer: 0 },
