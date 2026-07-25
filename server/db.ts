@@ -14,9 +14,12 @@ let _client: Client | null = null;
 let _ready: Promise<Client> | null = null;
 
 async function createClient(): Promise<Client> {
-  if (process.env.POSTGRES_URL) {
+  // Neon's Vercel integration may expose the connection string as POSTGRES_URL
+  // or DATABASE_URL — accept either.
+  const connectionString = process.env.POSTGRES_URL ?? process.env.DATABASE_URL;
+  if (connectionString) {
     const { createPool } = await import('@vercel/postgres');
-    const pool = createPool({ connectionString: process.env.POSTGRES_URL });
+    const pool = createPool({ connectionString });
     return {
       query: (text, params) => pool.query(text, params as never[]) as never,
     };
