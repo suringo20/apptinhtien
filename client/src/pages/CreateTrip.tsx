@@ -5,6 +5,7 @@ import { getUser, saveAuth } from '../lib/auth';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Field, Input } from '../components/Field';
+import { BackButton } from '../components/BackButton';
 
 interface MemberRow { name: string; contact: string; }
 
@@ -83,7 +84,8 @@ export function CreateTrip() {
 
   return (
     <MobileShell>
-      <h2 style={{ fontSize: 26, margin: '24px 0 20px' }}>New trip</h2>
+      <BackButton to="/join" label="Your trips" />
+      <h2 style={{ fontSize: 26, margin: '8px 0 20px' }}>New trip</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <Field label="Trip name">
           <Input placeholder="e.g. Da Lat Weekend" value={tripName} onChange={e => setTripName(e.target.value)} required />

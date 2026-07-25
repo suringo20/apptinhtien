@@ -5,6 +5,7 @@ import type { Activity, Trip } from '../types';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
+import { BackButton } from '../components/BackButton';
 
 function formatAmount(amount: number, currency: string) {
   const s = Math.round(amount).toLocaleString('en-US');
@@ -36,7 +37,8 @@ export function Dashboard() {
 
   return (
     <MobileShell>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '20px 0 4px' }}>
+      <BackButton to="/join" label="Your trips" />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0 4px' }}>
         <div>
           <h2 style={{ fontSize: 24, margin: 0 }}>{trip.name}</h2>
           <span style={{ fontSize: 12, color: '#8a8a86', letterSpacing: 1 }}>Code: <strong>{trip.code}</strong></span>
@@ -69,9 +71,6 @@ export function Dashboard() {
       </div>
 
       <Button onClick={() => navigate('/trip/summary')} style={{ marginTop: 24 }}>View summary →</Button>
-      <button onClick={() => navigate('/join')} style={{ marginTop: 12, background: 'none', border: 'none', color: '#8a8a86', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', width: '100%' }}>
-        ← Switch trip
-      </button>
     </MobileShell>
   );
 }

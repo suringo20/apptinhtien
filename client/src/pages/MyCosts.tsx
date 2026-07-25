@@ -5,6 +5,7 @@ import type { MyCosts as MyCostsData, Trip } from '../types';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
+import { BackButton } from '../components/BackButton';
 import { getAuth } from '../lib/auth';
 
 function formatAmount(n: number, currency: string) {
@@ -35,7 +36,8 @@ export function MyCosts() {
 
   return (
     <MobileShell>
-      <h2 style={{ fontSize: 26, margin: '24px 0 16px' }}>Hi, {member?.name ?? 'there'}</h2>
+      <BackButton to="/join" label="Your trips" />
+      <h2 style={{ fontSize: 26, margin: '8px 0 16px' }}>Hi, {member?.name ?? 'there'}</h2>
 
       <div style={{ border: '2.5px solid var(--border)', borderRadius: 16, background: 'var(--blue-bg)', padding: 16, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3 }}>
         <span style={{ fontSize: 14, color: '#5b7bb5' }}>You owe</span>
@@ -63,10 +65,6 @@ export function MyCosts() {
           Manage activities →
         </Button>
       )}
-
-      <button onClick={() => navigate('/join')} style={{ marginTop: 12, background: 'none', border: 'none', color: '#8a8a86', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', width: '100%' }}>
-        ← Switch trip
-      </button>
     </MobileShell>
   );
 }

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import type { Summary as SummaryData, Trip } from '../types';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
+import { BackButton } from '../components/BackButton';
 
 function formatAmount(n: number, currency: string) {
   const s = Math.round(n).toLocaleString('en-US');
@@ -11,7 +11,6 @@ function formatAmount(n: number, currency: string) {
 }
 
 export function Summary() {
-  const navigate = useNavigate();
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [trip, setTrip] = useState<Trip | null>(null);
   const [expanded, setExpanded] = useState<number | null>(null);
@@ -43,7 +42,8 @@ export function Summary() {
 
   return (
     <MobileShell>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '20px 0 4px' }}>
+      <BackButton to="/trip" label="Trip" />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0 4px' }}>
         <h2 style={{ fontSize: 26, margin: 0 }}>Summary</h2>
         <span style={{ background: 'var(--blue-bg)', border: '2px solid var(--blue)', color: 'var(--blue-dark)', borderRadius: 20, padding: '3px 11px', fontSize: 14 }}>
           {formatAmount(summary.grandTotal, trip.currency)}
@@ -90,7 +90,6 @@ export function Summary() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 24 }}>
         <Button variant="outline" onClick={copyText}>⤴ Copy summary</Button>
-        <Button variant="outline" onClick={() => navigate('/trip')}>← Back to activities</Button>
       </div>
     </MobileShell>
   );

@@ -6,6 +6,7 @@ import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Chip } from '../components/Chip';
 import { Field, Input } from '../components/Field';
+import { BackButton } from '../components/BackButton';
 
 function formatAmount(n: number, currency: string) {
   const s = Math.round(n).toLocaleString('en-US');
@@ -76,7 +77,8 @@ export function AddActivity() {
 
   return (
     <MobileShell>
-      <h2 style={{ fontSize: 26, margin: '20px 0 20px' }}>{isEdit ? 'Edit activity' : 'Add activity'}</h2>
+      <BackButton to="/trip" label="Trip" />
+      <h2 style={{ fontSize: 26, margin: '8px 0 20px' }}>{isEdit ? 'Edit activity' : 'Add activity'}</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <Field label="What was it?">
           <Input placeholder="e.g. Dinner — Night 1" value={name} onChange={e => setName(e.target.value)} required />

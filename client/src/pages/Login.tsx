@@ -5,6 +5,7 @@ import { saveUser } from '../lib/auth';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Field, Input } from '../components/Field';
+import { BackButton } from '../components/BackButton';
 
 export function Login() {
   const navigate = useNavigate();
@@ -32,7 +33,8 @@ export function Login() {
 
   return (
     <MobileShell>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: 48 }}>
+      <BackButton to="/" label="Create account" />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: 24 }}>
         <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--blue-bg)', border: '2.5px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: 'var(--blue-dark)', boxShadow: '2.5px 2.5px 0 var(--border)' }}>✶</div>
         <h1 style={{ fontSize: 28, margin: '8px 0 0' }}>Trip Splitter</h1>
         <p style={{ fontSize: 16, color: '#8a8a86', margin: 0 }}>Sign in to your account</p>
