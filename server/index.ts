@@ -19,9 +19,11 @@ export function buildApp() {
   app.use('/api/summary', summaryRouter);
 
   if (process.env.NODE_ENV === 'production') {
-    const staticDir = path.join(__dirname, '../client/dist');
+    // Built server runs from server/dist/, so the client build is two levels up.
+    const staticDir = path.join(__dirname, '../../client/dist');
     app.use(express.static(staticDir));
-    app.get('*', (_req, res) => res.sendFile(path.join(staticDir, 'index.html')));
+    // SPA fallback for non-API GETs only.
+    app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, 'index.html')));
   }
 
   return app;

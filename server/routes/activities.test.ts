@@ -73,3 +73,60 @@ describe('activity routes', () => {
     expect(res.status).toBe(204);
   });
 });
+
+describe('activity routes — multi-trip isolation', () => {
+  let tripB: number;
+  let orgB: number;
+
+  beforeEach(() => {
+    // A SECOND, newer trip exists — this used to hijack "latest trip" logic.
+    const db = getDb();
+    const hash = bcrypt.hashSync('s', 10);
+    const t = db.prepare("INSERT INTO trips (name, currency, organizer_code) VALUES ('B', '₫', ?)").run(hash);
+    tripB = t.lastInsertRowid as number;
+    orgB = db.prepare('INSERT INTO members (trip_id, name, contact, is_organizer) VALUES (?,?,?,?)')
+      .run(tripB, 'Bob', 'bob@x', 1).lastInsertRowid as number;
+  });
+
+  it('POST attaches the activity to the organizer\'s OWN trip, not the newest one', async () => {
+    const app = buildApp();
+    const created = await request(app)
+      .post('/api/activities')
+      .set('x-member-id', String(orgMemberId)) // organizer of trip A (older)
+      .send({ name: 'AliceDinner', totalAmount: 100, memberIds: [orgMemberId] });
+    expect(created.status).toBe(201);
+    const row = getDb().prepare('SELECT trip_id FROM activities WHERE id = ?').get(created.body.id) as { trip_id: number };
+    expect(row.trip_id).toBe(tripId); // trip A, not trip B
+  });
+
+  it('GET only returns the caller\'s own trip activities', async () => {
+    const app = buildApp();
+    await request(app).post('/api/activities').set('x-member-id', String(orgMemberId))
+      .send({ name: 'A-thing', totalAmount: 100, memberIds: [orgMemberId] });
+    await request(app).post('/api/activities').set('x-member-id', String(orgB))
+      .send({ name: 'B-thing', totalAmount: 200, memberIds: [orgB] });
+
+    const aList = await request(app).get('/api/activities').set('x-member-id', String(orgMemberId));
+    const bList = await request(app).get('/api/activities').set('x-member-id', String(orgB));
+    expect(aList.body.map((x: { name: string }) => x.name)).toEqual(['A-thing']);
+    expect(bList.body.map((x: { name: string }) => x.name)).toEqual(['B-thing']);
+  });
+
+  it('cannot delete an activity belonging to another trip', async () => {
+    const app = buildApp();
+    const created = await request(app).post('/api/activities').set('x-member-id', String(orgB))
+      .send({ name: 'B-only', totalAmount: 100, memberIds: [orgB] });
+    // Trip A organizer tries to delete trip B's activity
+    const res = await request(app).delete(`/api/activities/${created.body.id}`).set('x-member-id', String(orgMemberId));
+    expect(res.status).toBe(404);
+    // still there
+    expect(getDb().prepare('SELECT id FROM activities WHERE id = ?').get(created.body.id)).toBeTruthy();
+  });
+
+  it('rejects participants who are not members of the trip', async () => {
+    const app = buildApp();
+    const res = await request(app).post('/api/activities').set('x-member-id', String(orgMemberId))
+      .send({ name: 'X', totalAmount: 100, memberIds: [orgB] }); // orgB belongs to trip B
+    expect(res.status).toBe(400);
+  });
+});

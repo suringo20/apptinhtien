@@ -30,14 +30,15 @@ router.get('/me', (req, res) => {
 
 router.get('/', requireOrganizer, (req, res) => {
   const db = getDb();
-  const trip = db.prepare('SELECT id FROM trips ORDER BY id DESC LIMIT 1').get() as
-    | { id: number }
+  const memberId = res.locals['memberId'] as number;
+  const org = db.prepare('SELECT trip_id FROM members WHERE id = ?').get(memberId) as
+    | { trip_id: number }
     | undefined;
-  if (!trip) { res.status(404).json({ error: 'No trip' }); return; }
+  if (!org) { res.status(404).json({ error: 'No trip' }); return; }
 
   const members = db
     .prepare('SELECT id, name FROM members WHERE trip_id = ?')
-    .all(trip.id) as { id: number; name: string }[];
+    .all(org.trip_id) as { id: number; name: string }[];
 
   const result = members.map((m) => {
     const activities = db
