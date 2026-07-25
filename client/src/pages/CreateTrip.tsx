@@ -37,6 +37,7 @@ export function CreateTrip() {
     setError('');
     setLoading(true);
     try {
+      const user = getUser();
       const result = await api.createTrip({
         name: tripName,
         currency,
@@ -47,7 +48,6 @@ export function CreateTrip() {
         userId: user?.userId,
       });
       // Auto-join as organizer if logged in
-      const user = getUser();
       if (user) {
         const auth = await api.joinTrip({ tripCode: result.code, userId: user.userId, orgCode });
         saveAuth(auth);
