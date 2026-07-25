@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
-import { getUser, saveAuth } from '../lib/auth';
+import { getUser, saveAuth, clearAuth } from '../lib/auth';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
 import { Field, Input } from '../components/Field';
@@ -40,6 +40,11 @@ export function JoinTrip() {
     }
   }
 
+  function handleLogout() {
+    clearAuth();
+    navigate('/login');
+  }
+
   async function reopenTrip(trip: TripRow) {
     setJoiningId(trip.id);
     try {
@@ -55,9 +60,14 @@ export function JoinTrip() {
 
   return (
     <MobileShell>
-      <div style={{ marginTop: 32 }}>
-        <p style={{ fontSize: 14, color: '#8a8a86', margin: '0 0 4px' }}>Signed in as</p>
-        <p style={{ fontSize: 17, fontWeight: 600, margin: '0 0 28px' }}>{user.name} · {user.contact}</p>
+      <div style={{ marginTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+        <div>
+          <p style={{ fontSize: 14, color: '#8a8a86', margin: '0 0 4px' }}>Signed in as</p>
+          <p style={{ fontSize: 17, fontWeight: 600, margin: 0 }}>{user.name} · {user.contact}</p>
+        </div>
+        <button onClick={handleLogout} style={{ background: 'none', border: '2px solid #d3d2cc', borderRadius: 10, padding: '6px 12px', fontSize: 14, color: '#6b6b67', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+          Log out
+        </button>
       </div>
 
       {myTrips.length > 0 && (
