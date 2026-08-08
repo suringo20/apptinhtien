@@ -56,7 +56,23 @@ export function MyCosts() {
         ))}
       </div>
 
-      <p style={{ fontSize: 15, color: '#8a8a86', marginTop: 'auto', paddingTop: 24 }}>
+      <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '24px 0 8px' }}>
+        Trip members ({trip.members.length})
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {trip.members.map(m => (
+          <Card key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px' }}>
+            <span style={{ fontSize: 15 }}>{m.name}</span>
+            {m.is_organizer
+              ? <span style={{ fontSize: 12, color: 'var(--blue-dark)', background: 'var(--blue-bg)', borderRadius: 8, padding: '2px 8px' }}>Organizer</span>
+              : m.id === memberId
+                ? <span style={{ fontSize: 12, color: '#8a8a86' }}>You</span>
+                : null}
+          </Card>
+        ))}
+      </div>
+
+      <p style={{ fontSize: 15, color: '#8a8a86', paddingTop: 24 }}>
         Pay {organizer?.name ?? 'the organizer'} back whenever you can 🙂
       </p>
 
