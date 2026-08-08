@@ -34,6 +34,12 @@ export const api = {
   addMember: (body: { name: string; contact: string }) =>
     apiFetch<{ id: number; name: string; contact: string; is_organizer: number }>('/trip/members', { method: 'POST', body: JSON.stringify(body) }),
 
+  removeMember: (memberId: number) =>
+    apiFetch<void>(`/trip/members/${memberId}`, { method: 'DELETE' }),
+
+  deleteTrip: () =>
+    apiFetch<void>('/trip', { method: 'DELETE' }),
+
   createTrip: (body: {
     name: string;
     currency: string;

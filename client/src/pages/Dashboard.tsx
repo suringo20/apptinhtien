@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { clearAuth } from '../lib/auth';
 import type { Activity, Member, Trip } from '../types';
 import { MobileShell } from '../components/MobileShell';
 import { Button } from '../components/Button';
@@ -24,6 +25,9 @@ export function Dashboard() {
   const [newContact, setNewContact] = useState('');
   const [addError, setAddError] = useState('');
   const [addLoading, setAddLoading] = useState(false);
+  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getTrip(), api.getActivities()])
@@ -34,6 +38,31 @@ export function Dashboard() {
   async function deleteActivity(id: number) {
     await api.deleteActivity(id);
     setActivities(a => a.filter(x => x.id !== id));
+  }
+
+  async function handleRemoveMember(memberId: number) {
+    setRemovingId(memberId);
+    try {
+      await api.removeMember(memberId);
+      setTrip(t => t ? { ...t, members: t.members.filter(m => m.id !== memberId) } : t);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to remove member');
+    } finally {
+      setRemovingId(null);
+    }
+  }
+
+  async function handleDeleteTrip() {
+    setDeleteLoading(true);
+    try {
+      await api.deleteTrip();
+      clearAuth();
+      navigate('/join');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete trip');
+      setDeleteLoading(false);
+      setShowDeleteConfirm(false);
+    }
   }
 
   function copyCode() {
@@ -110,7 +139,12 @@ export function Dashboard() {
         {trip.members.map(m => (
           <Card key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px' }}>
             <span style={{ fontSize: 15 }}>{m.name}</span>
-            {m.is_organizer ? <span style={{ fontSize: 12, color: 'var(--blue-dark)', background: 'var(--blue-bg)', borderRadius: 8, padding: '2px 8px' }}>Organizer</span> : null}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {m.is_organizer
+                ? <span style={{ fontSize: 12, color: 'var(--blue-dark)', background: 'var(--blue-bg)', borderRadius: 8, padding: '2px 8px' }}>Organizer</span>
+                : <button onClick={() => handleRemoveMember(m.id)} disabled={removingId === m.id} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c8c7c1', fontSize: 18, lineHeight: 1 }}>{removingId === m.id ? '…' : '×'}</button>
+              }
+            </div>
           </Card>
         ))}
 
@@ -134,6 +168,22 @@ export function Dashboard() {
       </div>
 
       <Button onClick={() => navigate('/trip/summary')} style={{ marginTop: 24 }}>View summary →</Button>
+
+      {/* Delete trip */}
+      <div style={{ marginTop: 32, borderTop: '1.5px dashed #e0dfd9', paddingTop: 20 }}>
+        {showDeleteConfirm ? (
+          <div style={{ border: '2px solid #f5c6c6', borderRadius: 13, padding: 16, background: '#fff8f8' }}>
+            <p style={{ fontSize: 14, color: '#c0392b', margin: '0 0 12px', fontWeight: 600 }}>Delete this trip?</p>
+            <p style={{ fontSize: 13, color: '#8a8a86', margin: '0 0 14px' }}>This will permanently delete all activities and members. This cannot be undone.</p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={() => setShowDeleteConfirm(false)} style={{ flex: 1, border: '2px solid var(--border)', borderRadius: 10, padding: '8px 0', background: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Cancel</button>
+              <button onClick={handleDeleteTrip} disabled={deleteLoading} style={{ flex: 2, border: 'none', borderRadius: 10, padding: '8px 0', background: '#e74c3c', color: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 600 }}>{deleteLoading ? 'Deleting…' : 'Yes, delete trip'}</button>
+            </div>
+          </div>
+        ) : (
+          <button onClick={() => setShowDeleteConfirm(true)} style={{ width: '100%', border: '2px solid #f5c6c6', borderRadius: 13, padding: '10px 0', background: '#fff', color: '#c0392b', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Delete trip</button>
+        )}
+      </div>
     </MobileShell>
   );
 }

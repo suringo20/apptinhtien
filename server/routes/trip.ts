@@ -133,4 +133,37 @@ router.post('/members', requireAuth, requireOrganizer, ah(async (_req, res) => {
   res.status(201).json({ id: created!.id, name, contact, is_organizer: 0 });
 }));
 
+// Organizer removes a member from the current trip (cannot remove organizers)
+router.delete('/members/:memberId', requireAuth, requireOrganizer, ah(async (req, res) => {
+  const selfId = res.locals['memberId'] as number;
+  const self = await one<{ trip_id: number }>('SELECT trip_id FROM members WHERE id = $1', [selfId]);
+  const tripId = self!.trip_id;
+  const targetId = Number(req.params['memberId']);
+  const target = await one<{ trip_id: number; is_organizer: number }>(
+    'SELECT trip_id, is_organizer FROM members WHERE id = $1',
+    [targetId]
+  );
+  if (!target || target.trip_id !== tripId) {
+    res.status(404).json({ error: 'Member not found in this trip' });
+    return;
+  }
+  if (target.is_organizer) {
+    res.status(400).json({ error: 'Cannot remove the organizer' });
+    return;
+  }
+  await query('DELETE FROM members WHERE id = $1', [targetId]);
+  res.status(204).end();
+}));
+
+// Organizer deletes the entire trip and all its data
+router.delete('/', requireAuth, requireOrganizer, ah(async (_req, res) => {
+  const memberId = res.locals['memberId'] as number;
+  const self = await one<{ trip_id: number }>('SELECT trip_id FROM members WHERE id = $1', [memberId]);
+  const tripId = self!.trip_id;
+  await query('DELETE FROM activities WHERE trip_id = $1', [tripId]);
+  await query('DELETE FROM members WHERE trip_id = $1', [tripId]);
+  await query('DELETE FROM trips WHERE id = $1', [tripId]);
+  res.status(204).end();
+}));
+
 export default router;
