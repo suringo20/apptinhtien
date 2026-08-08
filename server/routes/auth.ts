@@ -11,7 +11,8 @@ router.post('/register', ah(async (req, res) => {
     res.status(400).json({ error: 'name, contact, and password required' });
     return;
   }
-  const existing = await one('SELECT id FROM users WHERE contact = $1', [contact]);
+  const normalizedContact = contact.toLowerCase().trim();
+  const existing = await one('SELECT id FROM users WHERE contact = $1', [normalizedContact]);
   if (existing) {
     res.status(409).json({ error: 'Account already exists with this contact' });
     return;
@@ -19,7 +20,7 @@ router.post('/register', ah(async (req, res) => {
   const hash = bcrypt.hashSync(password, 10);
   const row = await one<{ id: number }>(
     'INSERT INTO users (name, contact, password_hash) VALUES ($1, $2, $3) RETURNING id',
-    [name, contact, hash]
+    [name, normalizedContact, hash]
   );
   res.status(201).json({ userId: row!.id });
 }));
@@ -32,7 +33,7 @@ router.post('/login', ah(async (req, res) => {
   }
   const user = await one<{ id: number; name: string; password_hash: string }>(
     'SELECT id, name, password_hash FROM users WHERE contact = $1',
-    [contact]
+    [contact.toLowerCase().trim()]
   );
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     res.status(401).json({ error: 'Invalid contact or password' });
@@ -61,15 +62,16 @@ router.post('/join', ah(async (req, res) => {
     res.status(404).json({ error: 'Trip not found' });
     return;
   }
+  const normalizedContact = user.contact.toLowerCase().trim();
   let member = await one<{ id: number; is_organizer: number }>(
-    'SELECT id, is_organizer FROM members WHERE trip_id = $1 AND contact = $2',
-    [trip.id, user.contact]
+    'SELECT id, is_organizer FROM members WHERE trip_id = $1 AND LOWER(contact) = $2',
+    [trip.id, normalizedContact]
   );
   // Auto-join: if not already a member, create a member record from the user's account
   if (!member) {
     const created = await one<{ id: number }>(
       'INSERT INTO members (trip_id, name, contact, is_organizer) VALUES ($1, $2, $3, 0) RETURNING id',
-      [trip.id, user.name, user.contact]
+      [trip.id, user.name, normalizedContact]
     );
     member = { id: created!.id, is_organizer: 0 };
   }
@@ -88,7 +90,7 @@ router.get('/my-trips', ah(async (req, res) => {
   const trips = await query(`
     SELECT t.id, t.code, t.name, t.start_date, t.end_date, t.currency, m.is_organizer
     FROM trips t
-    JOIN members m ON m.trip_id = t.id AND m.contact = $1
+    JOIN members m ON m.trip_id = t.id AND LOWER(m.contact) = LOWER($1)
     ORDER BY t.id DESC
   `, [user.contact]);
   res.json(trips);

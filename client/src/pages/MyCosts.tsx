@@ -22,10 +22,17 @@ export function MyCosts() {
   const auth = getAuth();
   const memberId = auth?.memberId;
 
-  useEffect(() => {
+  function loadData() {
     Promise.all([api.getMyCosts(), api.getTrip()])
       .then(([d, t]) => { setData(d); setTrip(t); })
       .catch(err => setError(err instanceof Error ? err.message : 'Failed to load'));
+  }
+
+  useEffect(() => {
+    loadData();
+    const onVisible = () => { if (document.visibilityState === 'visible') loadData(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
   }, []);
 
   if (error) return <MobileShell><p style={{ color: 'red' }}>{error}</p></MobileShell>;
