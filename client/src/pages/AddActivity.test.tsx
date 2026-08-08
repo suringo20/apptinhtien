@@ -26,8 +26,8 @@ describe('AddActivity', () => {
       </MemoryRouter>
     );
 
-    // Wait for members to load
-    await screen.findByText('Nga');
+    // Wait for members to load (name appears once in "Who joined" and once in "Who paid")
+    await screen.findAllByText('Nga');
 
     // Enter amount
     fireEvent.change(screen.getByPlaceholderText('0'), { target: { value: '1200000' } });
@@ -35,8 +35,8 @@ describe('AddActivity', () => {
     // Both selected by default → split 2 ways = 600,000 each
     expect(await screen.findByText(/600,000/)).toBeInTheDocument();
 
-    // Deselect An → split 1 way = 1,200,000
-    fireEvent.click(screen.getByText('An'));
+    // Deselect An in the "Who joined" chips (first occurrence) → split 1 way = 1,200,000
+    fireEvent.click(screen.getAllByText('An')[0]);
     expect(screen.getByText(/1,200,000 ₫ each/)).toBeInTheDocument();
   });
 });

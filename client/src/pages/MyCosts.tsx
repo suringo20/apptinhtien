@@ -39,7 +39,6 @@ export function MyCosts() {
   if (!data || !trip) return <MobileShell><p>Loading…</p></MobileShell>;
 
   const member = trip.members.find(m => m.id === memberId);
-  const organizer = trip.members.find(m => m.is_organizer);
 
   return (
     <MobileShell>
@@ -47,9 +46,8 @@ export function MyCosts() {
       <h2 style={{ fontSize: 26, margin: '8px 0 16px' }}>Hi, {member?.name ?? 'there'}</h2>
 
       <div style={{ border: '2.5px solid var(--border)', borderRadius: 16, background: 'var(--blue-bg)', padding: 16, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <span style={{ fontSize: 14, color: '#5b7bb5' }}>You owe</span>
+        <span style={{ fontSize: 14, color: '#5b7bb5' }}>You owe in total</span>
         <span style={{ fontSize: 40, color: 'var(--blue-dark)', lineHeight: 1.1 }}>{formatAmount(data.total, trip.currency)}</span>
-        <span style={{ fontSize: 14, color: '#5b7bb5' }}>pay to {organizer?.name ?? 'organizer'}</span>
       </div>
 
       <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '20px 0 8px' }}>Activities you joined</p>
@@ -57,8 +55,15 @@ export function MyCosts() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {data.activities.map(a => (
           <Card key={a.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 16 }}>{a.name}</span>
-            <span style={{ fontSize: 15, color: 'var(--blue-dark)' }}>{formatAmount(a.share, trip.currency)}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{ fontSize: 16 }}>{a.name}</span>
+              {a.share > 0
+                ? <span style={{ fontSize: 12, color: '#8a8a86' }}>pay to {a.payer_name}</span>
+                : <span style={{ fontSize: 12, color: '#5a9a6e' }}>You paid</span>}
+            </div>
+            <span style={{ fontSize: 15, color: a.share > 0 ? 'var(--blue-dark)' : '#5a9a6e' }}>
+              {a.share > 0 ? formatAmount(a.share, trip.currency) : '✓'}
+            </span>
           </Card>
         ))}
       </div>
@@ -80,7 +85,7 @@ export function MyCosts() {
       </div>
 
       <p style={{ fontSize: 15, color: '#8a8a86', paddingTop: 24 }}>
-        Pay {organizer?.name ?? 'the organizer'} back whenever you can 🙂
+        Pay everyone back whenever you can 🙂
       </p>
 
       {auth?.isOrganizer && (

@@ -119,4 +119,8 @@ async function migrate(db: Client): Promise<void> {
       PRIMARY KEY (activity_id, member_id)
     );
   `);
+  // Migration: add payer_id to activities (NULL = organizer paid, for old rows)
+  await db.query(`
+    ALTER TABLE activities ADD COLUMN IF NOT EXISTS payer_id INTEGER REFERENCES members(id) ON DELETE SET NULL;
+  `);
 }

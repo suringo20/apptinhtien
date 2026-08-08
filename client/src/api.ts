@@ -52,10 +52,10 @@ export const api = {
 
   getActivities: () => apiFetch<Activity[]>('/activities'),
 
-  createActivity: (body: { name: string; totalAmount: number; memberIds: number[] }) =>
+  createActivity: (body: { name: string; totalAmount: number; memberIds: number[]; payerId?: number }) =>
     apiFetch<{ id: number }>('/activities', { method: 'POST', body: JSON.stringify(body) }),
 
-  updateActivity: (id: number, body: { name: string; totalAmount: number; memberIds: number[] }) =>
+  updateActivity: (id: number, body: { name: string; totalAmount: number; memberIds: number[]; payerId?: number }) =>
     apiFetch<{ id: number }>(`/activities/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 
   deleteActivity: (id: number) =>

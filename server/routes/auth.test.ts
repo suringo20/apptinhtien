@@ -100,13 +100,15 @@ describe('POST /api/auth/join', () => {
     expect(res.body.isOrganizer).toBe(false);
   });
 
-  it('returns 404 when the user is not a member of the trip', async () => {
+  it('auto-joins a stranger with a valid trip code as a non-organizer', async () => {
     const { tripCode } = await setupTrip();
     const stranger = await register('0909999999', 'Stranger');
     const res = await request(app())
       .post('/api/auth/join')
       .send({ tripCode, userId: stranger.body.userId });
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200);
+    expect(res.body.isOrganizer).toBe(false);
+    expect(res.body.memberId).toBeDefined();
   });
 
   it('returns 404 for an unknown trip code', async () => {

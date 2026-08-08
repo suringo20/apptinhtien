@@ -19,6 +19,8 @@ export interface Activity {
   id: number;
   name: string;
   total_amount: number;
+  payer_id: number | null;
+  payer_name: string | null;
   participants: { id: number; name: string }[];
 }
 
@@ -26,7 +28,7 @@ export interface SummaryMember {
   id: number;
   name: string;
   total: number;
-  activities: { name: string; share: number }[];
+  activities: { name: string; share: number; payer_name: string }[];
 }
 
 export interface Summary {
@@ -36,7 +38,7 @@ export interface Summary {
 
 export interface MyCosts {
   total: number;
-  activities: { name: string; share: number }[];
+  activities: { name: string; share: number; payer_name: string }[];
 }
 
 export interface UserSession {

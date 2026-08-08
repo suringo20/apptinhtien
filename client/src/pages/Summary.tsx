@@ -26,9 +26,10 @@ export function Summary() {
     if (!summary || !trip) return;
     const lines = [`${trip.name} — Summary`, ''];
     for (const m of summary.members) {
+      if (m.total === 0) continue;
       lines.push(`${m.name}: ${formatAmount(m.total, trip.currency)}`);
       for (const a of m.activities) {
-        lines.push(`  • ${a.name}: ${formatAmount(a.share, trip.currency)}`);
+        lines.push(`  • ${a.name}: ${formatAmount(a.share, trip.currency)} → ${a.payer_name}`);
       }
     }
     navigator.clipboard.writeText(lines.join('\n'));
@@ -37,8 +38,8 @@ export function Summary() {
   if (error) return <MobileShell><p style={{ color: 'red' }}>{error}</p></MobileShell>;
   if (!summary || !trip) return <MobileShell><p>Loading…</p></MobileShell>;
 
-  const organizer = trip.members.find(m => m.is_organizer);
-  const orgTotal = summary.members.find(m => m.id === organizer?.id)?.total ?? 0;
+  const owing = summary.members.filter(m => m.total > 0);
+  const settled = summary.members.filter(m => m.total === 0);
 
   return (
     <MobileShell>
@@ -51,11 +52,11 @@ export function Summary() {
       </div>
 
       <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '16px 0 8px' }}>
-        Everyone owes {organizer?.name ?? 'organizer'}
+        What everyone owes
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {summary.members.filter(m => m.id !== organizer?.id).map(m => (
+        {owing.map(m => (
           <div
             key={m.id}
             style={{ border: '2px solid var(--border-light)', borderRadius: 12, background: 'var(--card-bg)', overflow: 'hidden', cursor: 'pointer' }}
@@ -72,7 +73,8 @@ export function Summary() {
               <div style={{ borderTop: '1.5px dashed #d8d7d1', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 5, background: '#faf9f5' }}>
                 {m.activities.map(a => (
                   <div key={a.name} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#6b6b67' }}>
-                    <span>{a.name}</span><span>{formatAmount(a.share, trip.currency)}</span>
+                    <span>{a.name} <span style={{ color: '#b6b5af' }}>→ {a.payer_name}</span></span>
+                    <span>{formatAmount(a.share, trip.currency)}</span>
                   </div>
                 ))}
               </div>
@@ -80,12 +82,13 @@ export function Summary() {
           </div>
         ))}
 
-        <div style={{ border: '2px solid var(--blue)', borderRadius: 12, background: 'var(--blue-bg)', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <span style={{ fontSize: 16, color: 'var(--blue-dark)' }}>{organizer?.name} — paid everything</span>
-          <span style={{ fontSize: 13, color: '#5b7bb5' }}>
-            Paid {formatAmount(summary.grandTotal, trip.currency)} · gets back {formatAmount(summary.grandTotal - orgTotal, trip.currency)}
-          </span>
-        </div>
+        {settled.length > 0 && (
+          <div style={{ border: '2px solid #d8f0e0', borderRadius: 12, background: '#f4fbf6', padding: '10px 12px' }}>
+            <span style={{ fontSize: 14, color: '#5a9a6e' }}>
+              {settled.map(m => m.name).join(', ')} — settled ✓
+            </span>
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 24 }}>

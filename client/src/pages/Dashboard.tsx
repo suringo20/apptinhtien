@@ -119,6 +119,9 @@ export function Dashboard() {
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                 {a.participants.length === memberCount ? 'Everyone' : a.participants.map(p => p.name).join(', ')} · {a.participants.length} people
               </span>
+              <span style={{ fontSize: 12, color: '#8a8a86' }}>
+                Paid by {a.payer_name ?? trip.members.find(m => m.is_organizer)?.name ?? 'organizer'}
+              </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 15, whiteSpace: 'nowrap' }}>{formatAmount(a.total_amount, trip.currency)}</span>

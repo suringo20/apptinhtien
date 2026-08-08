@@ -22,6 +22,7 @@ export function AddActivity() {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [payerId, setPayerId] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +30,10 @@ export function AddActivity() {
     api.getTrip().then(t => {
       setTrip(t);
       setSelected(new Set(t.members.map(m => m.id)));
+      // Default payer: the organizer
+      const org = t.members.find(m => m.is_organizer);
+      if (org) setPayerId(org.id);
+
       if (isEdit) {
         api.getActivities().then((acts: Activity[]) => {
           const act = acts.find(a => a.id === Number(id));
@@ -36,6 +41,7 @@ export function AddActivity() {
             setName(act.name);
             setAmount(String(act.total_amount));
             setSelected(new Set(act.participants.map(p => p.id)));
+            if (act.payer_id) setPayerId(act.payer_id);
           }
         });
       }
@@ -59,10 +65,11 @@ export function AddActivity() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (selected.size === 0) { setError('Select at least one participant'); return; }
+    if (!payerId) { setError('Select who paid'); return; }
     setError('');
     setLoading(true);
     try {
-      const payload = { name, totalAmount: parsedAmount, memberIds: Array.from(selected) };
+      const payload = { name, totalAmount: parsedAmount, memberIds: Array.from(selected), payerId };
       if (isEdit) await api.updateActivity(Number(id), payload);
       else await api.createActivity(payload);
       navigate('/trip');
@@ -101,12 +108,20 @@ export function AddActivity() {
           ))}
         </div>
 
-        <div style={{ border: '2px solid var(--blue)', background: 'var(--blue-bg)', borderRadius: 12, padding: 13, textAlign: 'center', fontSize: 18, color: 'var(--blue-dark)' }}>
-          {splitText}
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '6px 0 0' }}>Who paid?</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {trip.members.map(m => (
+            <Chip
+              key={m.id}
+              label={m.name}
+              selected={payerId === m.id}
+              onClick={() => setPayerId(m.id)}
+            />
+          ))}
         </div>
 
-        <div style={{ background: 'var(--yellow-bg)', border: '1.5px solid var(--yellow-border)', borderRadius: 9, padding: '7px 10px', fontSize: 13, lineHeight: 1.35, color: 'var(--yellow-text)' }}>
-          Tap a name to include / exclude. The split recalculates instantly.
+        <div style={{ border: '2px solid var(--blue)', background: 'var(--blue-bg)', borderRadius: 12, padding: 13, textAlign: 'center', fontSize: 18, color: 'var(--blue-dark)' }}>
+          {splitText}
         </div>
 
         {error && <p style={{ color: 'red', fontSize: 14, margin: 0 }}>{error}</p>}

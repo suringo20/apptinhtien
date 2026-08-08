@@ -7,6 +7,7 @@ interface ChipProps {
 export function Chip({ label, selected, onClick }: ChipProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       style={{
         border: selected ? '2px solid var(--border)' : '2px dashed #bdbcb6',

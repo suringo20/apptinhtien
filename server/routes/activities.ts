@@ -23,8 +23,11 @@ router.get('/', ah(async (_req, res) => {
   const tripId = await memberTripId(memberId);
   if (!tripId) { res.status(404).json({ error: 'No trip' }); return; }
 
-  const activities = await query<{ id: number; name: string; total_amount: number }>(
-    'SELECT id, name, total_amount FROM activities WHERE trip_id = $1 ORDER BY id',
+  const activities = await query<{ id: number; name: string; total_amount: number; payer_id: number | null; payer_name: string | null }>(
+    `SELECT a.id, a.name, a.total_amount, a.payer_id, m.name AS payer_name
+     FROM activities a
+     LEFT JOIN members m ON m.id = a.payer_id
+     WHERE a.trip_id = $1 ORDER BY a.id`,
     [tripId]
   );
 
@@ -43,10 +46,11 @@ router.get('/', ah(async (_req, res) => {
 }));
 
 router.post('/', requireOrganizer, ah(async (req, res) => {
-  const { name, totalAmount, memberIds } = req.body as {
+  const { name, totalAmount, memberIds, payerId } = req.body as {
     name: string;
     totalAmount: number;
     memberIds: number[];
+    payerId?: number;
   };
   if (!name || !totalAmount || totalAmount <= 0 || !memberIds?.length) {
     res.status(400).json({ error: 'name, positive totalAmount, and memberIds required' });
@@ -62,10 +66,14 @@ router.post('/', requireOrganizer, ah(async (req, res) => {
     res.status(400).json({ error: 'All participants must belong to this trip' });
     return;
   }
+  if (payerId && !validIds.has(payerId)) {
+    res.status(400).json({ error: 'Payer must belong to this trip' });
+    return;
+  }
 
   const act = await one<{ id: number }>(
-    'INSERT INTO activities (trip_id, name, total_amount) VALUES ($1, $2, $3) RETURNING id',
-    [tripId, name, totalAmount]
+    'INSERT INTO activities (trip_id, name, total_amount, payer_id) VALUES ($1, $2, $3, $4) RETURNING id',
+    [tripId, name, totalAmount, payerId ?? null]
   );
   const actId = act!.id;
 
@@ -78,10 +86,11 @@ router.post('/', requireOrganizer, ah(async (req, res) => {
 
 router.put('/:id', requireOrganizer, ah(async (req, res) => {
   const id = Number(req.params['id']);
-  const { name, totalAmount, memberIds } = req.body as {
+  const { name, totalAmount, memberIds, payerId } = req.body as {
     name: string;
     totalAmount: number;
     memberIds: number[];
+    payerId?: number;
   };
   if (!name || !totalAmount || totalAmount <= 0 || !memberIds?.length) {
     res.status(400).json({ error: 'name, positive totalAmount, and memberIds required' });
@@ -102,8 +111,12 @@ router.put('/:id', requireOrganizer, ah(async (req, res) => {
     res.status(400).json({ error: 'All participants must belong to this trip' });
     return;
   }
+  if (payerId && !validIds.has(payerId)) {
+    res.status(400).json({ error: 'Payer must belong to this trip' });
+    return;
+  }
 
-  await query('UPDATE activities SET name = $1, total_amount = $2 WHERE id = $3', [name, totalAmount, id]);
+  await query('UPDATE activities SET name = $1, total_amount = $2, payer_id = $3 WHERE id = $4', [name, totalAmount, payerId ?? null, id]);
   await query('DELETE FROM activity_members WHERE activity_id = $1', [id]);
   for (const mid of memberIds) {
     await query('INSERT INTO activity_members (activity_id, member_id) VALUES ($1, $2)', [id, mid]);
