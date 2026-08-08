@@ -1,12 +1,6 @@
-export function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+export function Card({ children, style, onClick }: { children: React.ReactNode; style?: React.CSSProperties; onClick?: () => void }) {
   return (
-    <div style={{
-      background: 'var(--card-bg)',
-      border: '2px solid var(--border-light)',
-      borderRadius: 12,
-      padding: '10px 12px',
-      ...style,
-    }}>
+    <div className="card" style={{ cursor: onClick ? 'pointer' : undefined, ...style }} onClick={onClick}>
       {children}
     </div>
   );

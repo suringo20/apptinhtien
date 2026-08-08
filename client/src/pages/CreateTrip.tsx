@@ -69,11 +69,11 @@ export function CreateTrip() {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginTop: 48, textAlign: 'center' }}>
           <div style={{ fontSize: 48 }}>🎉</div>
           <h2 style={{ fontSize: 24, margin: 0 }}>Trip created!</h2>
-          <p style={{ color: '#8a8a86', margin: 0 }}>Share this code with your group</p>
-          <div style={{ background: 'var(--blue-bg)', border: '2.5px solid var(--blue)', borderRadius: 14, padding: '18px 32px', fontSize: 36, fontWeight: 700, letterSpacing: 6, color: 'var(--blue-dark)', boxShadow: '3px 3px 0 var(--border)' }}>
+          <p style={{ color: 'var(--text-muted)', margin: 0 }}>Share this code with your group</p>
+          <div style={{ background: 'var(--blue-bg)', border: '1.5px solid var(--blue)', borderRadius: 14, padding: '18px 32px', fontSize: 36, fontWeight: 700, letterSpacing: 6, color: 'var(--blue-dark)', boxShadow: 'var(--shadow-md)' }}>
             {createdCode}
           </div>
-          <p style={{ fontSize: 13, color: '#8a8a86', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
             Everyone enters this code on the sign-in screen along with their phone/email to access the trip.
           </p>
           <Button onClick={() => navigate('/')} style={{ marginTop: 8, width: '100%' }}>Go to sign in →</Button>
@@ -95,7 +95,7 @@ export function CreateTrip() {
           <Field label="End date"><Input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} /></Field>
         </div>
         <Field label="Currency">
-          <select value={currency} onChange={e => setCurrency(e.target.value)} style={{ width: '100%', border: '2px solid #d3d2cc', borderRadius: 11, padding: '9px 12px', fontSize: 17, fontFamily: 'inherit', background: '#fff' }}>
+          <select value={currency} onChange={e => setCurrency(e.target.value)} style={{ width: '100%', border: '2px solid var(--border-light)', borderRadius: 11, padding: '9px 12px', fontSize: 17, fontFamily: 'inherit', background: '#fff' }}>
             {['₫', '$', '€', '£'].map(c => <option key={c}>{c}</option>)}
           </select>
         </Field>
@@ -108,10 +108,10 @@ export function CreateTrip() {
           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
             <Field label="Name"><Input placeholder="Name" value={m.name} onChange={e => updateMember(i, 'name', e.target.value)} /></Field>
             <Field label="Phone / email"><Input placeholder="Phone or email" value={m.contact} onChange={e => updateMember(i, 'contact', e.target.value)} /></Field>
-            {members.length > 1 && <button type="button" onClick={() => removeMember(i)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#c8c7c1', marginBottom: 2 }}>×</button>}
+            {members.length > 1 && <button type="button" onClick={() => removeMember(i)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-muted)', marginBottom: 2 }}>×</button>}
           </div>
         ))}
-        <button type="button" onClick={addMember} style={{ border: '2px dashed #bdbcb6', borderRadius: 10, padding: 8, textAlign: 'center', color: '#8a8a86', fontSize: 15, background: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add member</button>
+        <button type="button" onClick={addMember} style={{ border: '2px dashed var(--border-light)', borderRadius: 10, padding: 8, textAlign: 'center', color: 'var(--text-muted)', fontSize: 15, background: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add member</button>
 
         {error && <p style={{ color: 'red', fontSize: 14, margin: 0 }}>{error}</p>}
         <Button type="submit" disabled={loading} style={{ marginTop: 8 }}>{loading ? 'Creating…' : 'Start trip →'}</Button>

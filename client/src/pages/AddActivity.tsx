@@ -97,8 +97,8 @@ export function AddActivity() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <p style={{ fontSize: 13, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>Who joined?</p>
           <div style={{ display: 'flex', gap: 6 }}>
-            <button type="button" onClick={() => setSelected(new Set(trip.members.map(m => m.id)))} style={{ border: '2px solid #d3d2cc', borderRadius: 8, padding: '3px 9px', fontSize: 13, color: '#6b6b67', cursor: 'pointer', background: '#fff', fontFamily: 'inherit' }}>Everyone</button>
-            <button type="button" onClick={() => setSelected(new Set())} style={{ border: '2px solid #d3d2cc', borderRadius: 8, padding: '3px 9px', fontSize: 13, color: '#6b6b67', cursor: 'pointer', background: '#fff', fontFamily: 'inherit' }}>None</button>
+            <button type="button" onClick={() => setSelected(new Set(trip.members.map(m => m.id)))} style={{ border: '2px solid var(--border-light)', borderRadius: 8, padding: '3px 9px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', background: '#fff', fontFamily: 'inherit' }}>Everyone</button>
+            <button type="button" onClick={() => setSelected(new Set())} style={{ border: '2px solid var(--border-light)', borderRadius: 8, padding: '3px 9px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', background: '#fff', fontFamily: 'inherit' }}>None</button>
           </div>
         </div>
 

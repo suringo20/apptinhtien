@@ -35,9 +35,9 @@ export function Login() {
     <MobileShell>
       <BackButton to="/" label="Create account" />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: 24 }}>
-        <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--blue-bg)', border: '2.5px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: 'var(--blue-dark)', boxShadow: '2.5px 2.5px 0 var(--border)' }}>✶</div>
+        <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--blue-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: 'var(--blue-dark)', boxShadow: 'var(--shadow-md)' }}>✶</div>
         <h1 style={{ fontSize: 28, margin: '8px 0 0' }}>Trip Splitter</h1>
-        <p style={{ fontSize: 16, color: '#8a8a86', margin: 0 }}>Sign in to your account</p>
+        <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: 0 }}>Sign in to your account</p>
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 28 }}>
@@ -51,7 +51,7 @@ export function Login() {
         <Button type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Sign in →'}</Button>
       </form>
 
-      <div style={{ marginTop: 20, textAlign: 'center', fontSize: 15, color: '#8a8a86' }}>
+      <div style={{ marginTop: 20, textAlign: 'center', fontSize: 15, color: 'var(--text-muted)' }}>
         No account yet?{' '}
         <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: 'var(--blue)', fontSize: 15, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>
           Create one

@@ -72,7 +72,7 @@ export function Summary() {
             {expanded === m.id && (
               <div style={{ borderTop: '1.5px dashed #d8d7d1', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 5, background: '#faf9f5' }}>
                 {m.activities.map(a => (
-                  <div key={a.name} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: '#6b6b67' }}>
+                  <div key={a.name} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--text-muted)' }}>
                     <span>{a.name} <span style={{ color: '#b6b5af' }}>→ {a.payer_name}</span></span>
                     <span>{formatAmount(a.share, trip.currency)}</span>
                   </div>

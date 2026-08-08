@@ -45,7 +45,7 @@ export function MyCosts() {
       <BackButton to="/join" label="Your trips" />
       <h2 style={{ fontSize: 26, margin: '8px 0 16px' }}>Hi, {member?.name ?? 'there'}</h2>
 
-      <div style={{ border: '2.5px solid var(--border)', borderRadius: 16, background: 'var(--blue-bg)', padding: 16, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <div style={{ borderRadius: 16, background: 'var(--blue-bg)', padding: 16, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3, boxShadow: 'var(--shadow-sm)' }}>
         <span style={{ fontSize: 14, color: '#5b7bb5' }}>You owe in total</span>
         <span style={{ fontSize: 40, color: 'var(--blue-dark)', lineHeight: 1.1 }}>{formatAmount(data.total, trip.currency)}</span>
       </div>
@@ -58,7 +58,7 @@ export function MyCosts() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <span style={{ fontSize: 16 }}>{a.name}</span>
               {a.share > 0
-                ? <span style={{ fontSize: 12, color: '#8a8a86' }}>pay to {a.payer_name}</span>
+                ? <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>pay to {a.payer_name}</span>
                 : <span style={{ fontSize: 12, color: '#5a9a6e' }}>You paid</span>}
             </div>
             <span style={{ fontSize: 15, color: a.share > 0 ? 'var(--blue-dark)' : '#5a9a6e' }}>
@@ -78,13 +78,13 @@ export function MyCosts() {
             {m.is_organizer
               ? <span style={{ fontSize: 12, color: 'var(--blue-dark)', background: 'var(--blue-bg)', borderRadius: 8, padding: '2px 8px' }}>Organizer</span>
               : m.id === memberId
-                ? <span style={{ fontSize: 12, color: '#8a8a86' }}>You</span>
+                ? <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>You</span>
                 : null}
           </Card>
         ))}
       </div>
 
-      <p style={{ fontSize: 15, color: '#8a8a86', paddingTop: 24 }}>
+      <p style={{ fontSize: 15, color: 'var(--text-muted)', paddingTop: 24 }}>
         Pay everyone back whenever you can 🙂
       </p>
 

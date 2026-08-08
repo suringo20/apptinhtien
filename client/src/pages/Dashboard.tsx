@@ -100,7 +100,7 @@ export function Dashboard() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0 4px' }}>
         <div>
           <h2 style={{ fontSize: 24, margin: 0 }}>{trip.name}</h2>
-          <button onClick={copyCode} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 12, color: '#8a8a86', letterSpacing: 1 }}>
+          <button onClick={copyCode} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 12, color: 'var(--text-muted)', letterSpacing: 1 }}>
             Code: <strong>{trip.code}</strong> {copied ? '✓ Copied' : '· tap to copy'}
           </button>
         </div>
@@ -119,14 +119,14 @@ export function Dashboard() {
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                 {a.participants.length === memberCount ? 'Everyone' : a.participants.map(p => p.name).join(', ')} · {a.participants.length} people
               </span>
-              <span style={{ fontSize: 12, color: '#8a8a86' }}>
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                 Paid by {a.payer_name ?? trip.members.find(m => m.is_organizer)?.name ?? 'organizer'}
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 15, whiteSpace: 'nowrap' }}>{formatAmount(a.total_amount, trip.currency)}</span>
               <button onClick={() => navigate(`/trip/activity/${a.id}/edit`)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--blue)', fontSize: 14, fontFamily: 'inherit' }}>Edit</button>
-              <button onClick={() => deleteActivity(a.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c8c7c1', fontSize: 18 }}>×</button>
+              <button onClick={() => deleteActivity(a.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 18 }}>×</button>
             </div>
           </Card>
         ))}
@@ -143,43 +143,43 @@ export function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {m.is_organizer
                 ? <span style={{ fontSize: 12, color: 'var(--blue-dark)', background: 'var(--blue-bg)', borderRadius: 8, padding: '2px 8px' }}>Organizer</span>
-                : <button onClick={() => handleRemoveMember(m.id)} disabled={removingId === m.id} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c8c7c1', fontSize: 18, lineHeight: 1 }}>{removingId === m.id ? '…' : '×'}</button>
+                : <button onClick={() => handleRemoveMember(m.id)} disabled={removingId === m.id} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 18, lineHeight: 1 }}>{removingId === m.id ? '…' : '×'}</button>
               }
             </div>
           </Card>
         ))}
 
         {showAddMember ? (
-          <form onSubmit={handleAddMember} style={{ border: '2px solid var(--border)', borderRadius: 13, padding: 14, background: '#fff', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <form onSubmit={handleAddMember} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <Field label="Gmail address">
               <Input type="email" placeholder="example@gmail.com" value={newContact} onChange={e => setNewContact(e.target.value)} required />
             </Field>
             {addError && <p style={{ color: 'red', fontSize: 13, margin: 0 }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button" onClick={() => { setShowAddMember(false); setAddError(''); }} style={{ flex: 1, border: '2px solid var(--border)', borderRadius: 10, padding: '8px 0', background: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Cancel</button>
-              <button type="submit" disabled={addLoading} style={{ flex: 2, border: 'none', borderRadius: 10, padding: '8px 0', background: 'var(--blue)', color: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 600 }}>{addLoading ? 'Adding…' : 'Add member'}</button>
+              <Button variant="outline" type="button" onClick={() => { setShowAddMember(false); setAddError(''); }} style={{ flex: 1, padding: '8px 0', fontSize: 14 }}>Cancel</Button>
+              <Button type="submit" disabled={addLoading} style={{ flex: 2, padding: '8px 0', fontSize: 14 }}>{addLoading ? 'Adding…' : 'Add member'}</Button>
             </div>
           </form>
         ) : (
-          <button onClick={() => setShowAddMember(true)} style={{ border: '2.5px dashed #cfceC8', color: '#6b6b67', borderRadius: 13, padding: 10, textAlign: 'center', fontSize: 15, background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add member</button>
+          <button onClick={() => setShowAddMember(true)} style={{ border: '2px dashed var(--border-light)', color: 'var(--text-muted)', borderRadius: 13, padding: 10, textAlign: 'center', fontSize: 15, background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add member</button>
         )}
       </div>
 
       <Button onClick={() => navigate('/trip/summary')} style={{ marginTop: 24 }}>View summary →</Button>
 
       {/* Delete trip */}
-      <div style={{ marginTop: 32, borderTop: '1.5px dashed #e0dfd9', paddingTop: 20 }}>
+      <div style={{ marginTop: 32, borderTop: '1.5px dashed var(--border-light)', paddingTop: 20 }}>
         {showDeleteConfirm ? (
-          <div style={{ border: '2px solid #f5c6c6', borderRadius: 13, padding: 16, background: '#fff8f8' }}>
+          <div style={{ border: '1.5px solid #f5c6c6', borderRadius: 13, padding: 16, background: '#fff8f8', boxShadow: 'var(--shadow-sm)' }}>
             <p style={{ fontSize: 14, color: '#c0392b', margin: '0 0 12px', fontWeight: 600 }}>Delete this trip?</p>
-            <p style={{ fontSize: 13, color: '#8a8a86', margin: '0 0 14px' }}>This will permanently delete all activities and members. This cannot be undone.</p>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '0 0 14px' }}>This will permanently delete all activities and members. This cannot be undone.</p>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => setShowDeleteConfirm(false)} style={{ flex: 1, border: '2px solid var(--border)', borderRadius: 10, padding: '8px 0', background: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Cancel</button>
-              <button onClick={handleDeleteTrip} disabled={deleteLoading} style={{ flex: 2, border: 'none', borderRadius: 10, padding: '8px 0', background: '#e74c3c', color: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 600 }}>{deleteLoading ? 'Deleting…' : 'Yes, delete trip'}</button>
+              <Button variant="outline" onClick={() => setShowDeleteConfirm(false)} style={{ flex: 1, padding: '8px 0', fontSize: 14 }}>Cancel</Button>
+              <button onClick={handleDeleteTrip} disabled={deleteLoading} style={{ flex: 2, border: 'none', borderRadius: 10, padding: '8px 0', background: '#e74c3c', color: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 600, boxShadow: 'var(--shadow-sm)' }}>{deleteLoading ? 'Deleting…' : 'Yes, delete trip'}</button>
             </div>
           </div>
         ) : (
-          <button onClick={() => setShowDeleteConfirm(true)} style={{ width: '100%', border: '2px solid #f5c6c6', borderRadius: 13, padding: '10px 0', background: '#fff', color: '#c0392b', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Delete trip</button>
+          <button onClick={() => setShowDeleteConfirm(true)} style={{ width: '100%', border: '1.5px solid #f5c6c6', borderRadius: 13, padding: '10px 0', background: '#fff', color: '#c0392b', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>Delete trip</button>
         )}
       </div>
     </MobileShell>

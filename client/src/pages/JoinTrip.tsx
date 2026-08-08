@@ -74,10 +74,10 @@ export function JoinTrip() {
     <MobileShell>
       <div style={{ marginTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
-          <p style={{ fontSize: 14, color: '#8a8a86', margin: '0 0 4px' }}>Signed in as</p>
+          <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 4px' }}>Signed in as</p>
           <p style={{ fontSize: 17, fontWeight: 600, margin: 0 }}>{user.name} · {user.contact}</p>
         </div>
-        <button onClick={handleLogout} style={{ background: 'none', border: '2px solid #d3d2cc', borderRadius: 10, padding: '6px 12px', fontSize: 14, color: '#6b6b67', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+        <button onClick={handleLogout} style={{ background: 'none', border: '2px solid var(--border-light)', borderRadius: 10, padding: '6px 12px', fontSize: 14, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
           Log out
         </button>
       </div>
@@ -85,7 +85,7 @@ export function JoinTrip() {
       <h2 style={{ fontSize: 24, margin: '0 0 14px' }}>Your trips</h2>
 
       {loadingTrips ? (
-        <p style={{ color: '#8a8a86', fontSize: 15, margin: '4px 0 24px' }}>Loading…</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: 15, margin: '4px 0 24px' }}>Loading…</p>
       ) : myTrips.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
           {myTrips.map(trip => {
@@ -95,16 +95,16 @@ export function JoinTrip() {
                 key={trip.id}
                 onClick={() => reopenTrip(trip)}
                 disabled={joiningId === trip.id}
+                className="card"
                 style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  background: '#fff', border: '2px solid var(--border)', borderRadius: 13,
                   padding: '12px 16px', cursor: 'pointer', fontFamily: 'inherit',
-                  boxShadow: '3px 3px 0 var(--border)', textAlign: 'left',
+                  textAlign: 'left', width: '100%',
                 }}
               >
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 600 }}>{trip.name}</div>
-                  <div style={{ fontSize: 12, color: '#8a8a86', marginTop: 2 }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
                     {trip.is_organizer ? 'Organizer' : 'Member'} · {trip.code}{dates ? ` · ${dates}` : ''}
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export function JoinTrip() {
           })}
         </div>
       ) : (
-        <div style={{ border: '2px dashed #cfceC8', borderRadius: 13, padding: '24px 16px', textAlign: 'center', color: '#8a8a86', marginBottom: 24 }}>
+        <div style={{ border: '2px dashed var(--border-light)', borderRadius: 13, padding: '24px 16px', textAlign: 'center', color: 'var(--text-muted)', marginBottom: 24 }}>
           <div style={{ fontSize: 30, marginBottom: 6 }}>🧳</div>
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>No trips yet.<br />Create one or join with a code below.</p>
         </div>
