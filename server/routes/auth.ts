@@ -48,7 +48,7 @@ router.post('/join', ah(async (req, res) => {
     res.status(400).json({ error: 'tripCode and userId required' });
     return;
   }
-  const user = await one<{ contact: string }>('SELECT contact FROM users WHERE id = $1', [userId]);
+  const user = await one<{ name: string; contact: string }>('SELECT name, contact FROM users WHERE id = $1', [userId]);
   if (!user) {
     res.status(401).json({ error: 'Invalid user' });
     return;
@@ -61,15 +61,19 @@ router.post('/join', ah(async (req, res) => {
     res.status(404).json({ error: 'Trip not found' });
     return;
   }
-  const member = await one<{ id: number; is_organizer: number }>(
+  let member = await one<{ id: number; is_organizer: number }>(
     'SELECT id, is_organizer FROM members WHERE trip_id = $1 AND contact = $2',
     [trip.id, user.contact]
   );
+  // Auto-join: if not already a member, create a member record from the user's account
   if (!member) {
-    res.status(404).json({ error: 'You are not a member of this trip. Ask the organizer to add your contact.' });
-    return;
+    const created = await one<{ id: number }>(
+      'INSERT INTO members (trip_id, name, contact, is_organizer) VALUES ($1, $2, $3, 0) RETURNING id',
+      [trip.id, user.name, user.contact]
+    );
+    member = { id: created!.id, is_organizer: 0 };
   }
-  // Use DB organizer flag; orgCode can elevate to organizer if it matches
+  // orgCode can elevate to organizer if it matches
   const isOrganizer = member.is_organizer === 1 ||
     (!!orgCode && bcrypt.compareSync(orgCode, trip.organizer_code));
   res.json({ memberId: member.id, tripId: trip.id, tripCode: tripCode.toUpperCase(), isOrganizer });

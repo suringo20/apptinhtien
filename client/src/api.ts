@@ -31,6 +31,9 @@ export const api = {
 
   getTrip: () => apiFetch<Trip>('/trip'),
 
+  addMember: (body: { name: string; contact: string }) =>
+    apiFetch<{ id: number; name: string; contact: string; is_organizer: number }>('/trip/members', { method: 'POST', body: JSON.stringify(body) }),
+
   createTrip: (body: {
     name: string;
     currency: string;

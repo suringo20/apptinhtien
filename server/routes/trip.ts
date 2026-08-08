@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { query, one } from '../db.js';
 import { ah } from '../lib/asyncHandler.js';
+import { requireAuth, requireOrganizer } from '../middleware/requireAuth.js';
 
 const router = Router();
 
@@ -108,6 +109,28 @@ router.get('/', ah(async (req, res) => {
     [trip['id']]
   );
   res.json({ ...trip, members });
+}));
+
+// Organizer adds a new member to the current trip
+router.post('/members', requireAuth, requireOrganizer, ah(async (_req, res) => {
+  const { name, contact } = _req.body as { name: string; contact: string };
+  if (!name || !contact) {
+    res.status(400).json({ error: 'name and contact required' });
+    return;
+  }
+  const memberId = res.locals['memberId'] as number;
+  const self = await one<{ trip_id: number }>('SELECT trip_id FROM members WHERE id = $1', [memberId]);
+  const tripId = self!.trip_id;
+  const existing = await one('SELECT id FROM members WHERE trip_id = $1 AND contact = $2', [tripId, contact]);
+  if (existing) {
+    res.status(409).json({ error: 'This person is already in the trip' });
+    return;
+  }
+  const created = await one<{ id: number }>(
+    'INSERT INTO members (trip_id, name, contact, is_organizer) VALUES ($1, $2, $3, 0) RETURNING id',
+    [tripId, name, contact]
+  );
+  res.status(201).json({ id: created!.id, name, contact, is_organizer: 0 });
 }));
 
 export default router;
