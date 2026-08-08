@@ -111,26 +111,35 @@ router.get('/', ah(async (req, res) => {
   res.json({ ...trip, members });
 }));
 
-// Organizer adds a new member to the current trip
+// Organizer adds a new member to the current trip (must be an existing Gmail account)
 router.post('/members', requireAuth, requireOrganizer, ah(async (_req, res) => {
-  const { name, contact } = _req.body as { name: string; contact: string };
-  if (!name || !contact) {
-    res.status(400).json({ error: 'name and contact required' });
+  const { contact } = _req.body as { contact: string };
+  if (!contact) {
+    res.status(400).json({ error: 'Gmail address required' });
+    return;
+  }
+  if (!contact.toLowerCase().endsWith('@gmail.com')) {
+    res.status(400).json({ error: 'Only Gmail addresses are supported' });
+    return;
+  }
+  const user = await one<{ name: string }>('SELECT name FROM users WHERE contact = $1', [contact.toLowerCase()]);
+  if (!user) {
+    res.status(404).json({ error: 'No account found with this Gmail' });
     return;
   }
   const memberId = res.locals['memberId'] as number;
   const self = await one<{ trip_id: number }>('SELECT trip_id FROM members WHERE id = $1', [memberId]);
   const tripId = self!.trip_id;
-  const existing = await one('SELECT id FROM members WHERE trip_id = $1 AND contact = $2', [tripId, contact]);
+  const existing = await one('SELECT id FROM members WHERE trip_id = $1 AND contact = $2', [tripId, contact.toLowerCase()]);
   if (existing) {
     res.status(409).json({ error: 'This person is already in the trip' });
     return;
   }
   const created = await one<{ id: number }>(
     'INSERT INTO members (trip_id, name, contact, is_organizer) VALUES ($1, $2, $3, 0) RETURNING id',
-    [tripId, name, contact]
+    [tripId, user.name, contact.toLowerCase()]
   );
-  res.status(201).json({ id: created!.id, name, contact, is_organizer: 0 });
+  res.status(201).json({ id: created!.id, name: user.name, contact: contact.toLowerCase(), is_organizer: 0 });
 }));
 
 // Organizer removes a member from the current trip (cannot remove organizers)

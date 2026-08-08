@@ -21,7 +21,6 @@ export function Dashboard() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
-  const [newName, setNewName] = useState('');
   const [newContact, setNewContact] = useState('');
   const [addError, setAddError] = useState('');
   const [addLoading, setAddLoading] = useState(false);
@@ -78,9 +77,8 @@ export function Dashboard() {
     setAddError('');
     setAddLoading(true);
     try {
-      const member = await api.addMember({ name: newName.trim(), contact: newContact.trim() });
+      const member = await api.addMember({ contact: newContact.trim() });
       setTrip(t => t ? { ...t, members: [...t.members, member as Member] } : t);
-      setNewName('');
       setNewContact('');
       setShowAddMember(false);
     } catch (err) {
@@ -150,11 +148,8 @@ export function Dashboard() {
 
         {showAddMember ? (
           <form onSubmit={handleAddMember} style={{ border: '2px solid var(--border)', borderRadius: 13, padding: 14, background: '#fff', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <Field label="Name">
-              <Input placeholder="Their name" value={newName} onChange={e => setNewName(e.target.value)} required />
-            </Field>
-            <Field label="Phone or email">
-              <Input placeholder="Their contact" value={newContact} onChange={e => setNewContact(e.target.value)} required />
+            <Field label="Gmail address">
+              <Input type="email" placeholder="example@gmail.com" value={newContact} onChange={e => setNewContact(e.target.value)} required />
             </Field>
             {addError && <p style={{ color: 'red', fontSize: 13, margin: 0 }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 8 }}>
